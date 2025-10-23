@@ -1,6 +1,6 @@
-# Restaurant Portal - Ultra-Premium Management System
+# restaurant
 
-An ultra-premium restaurant management portal built with Next.js 15, featuring a brutalist minimalist design inspired by Next.js and Vercel websites.
+Built with Next.js 15.
 
 ## Features
 
