@@ -128,7 +128,7 @@ export default function DashboardPage() {
               className="group hover:shadow-xl hover:border-primary/20 transition-all duration-300 cursor-pointer hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4"
               style={{ animationDelay: `${index * 100}ms` }}
               onClick={() =>
-                (window.location.href = `/restaurant/@${restaurant.slug}/orders`)
+                (window.location.href = `/restaurant/@${restaurant.slug}`)
               }
             >
               <CardHeader className="space-y-4">
