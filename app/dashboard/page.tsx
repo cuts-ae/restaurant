@@ -10,6 +10,7 @@ import { API_ENDPOINTS } from "@/lib/api";
 interface Restaurant {
   id: string;
   name: string;
+  slug: string;
   description: string;
   ordersToday?: number;
   revenue?: string;
