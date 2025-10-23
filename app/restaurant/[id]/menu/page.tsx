@@ -23,6 +23,7 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+import { API_ENDPOINTS } from "@/lib/api";
 
 interface NutritionalInfo {
   calories: number;
@@ -67,7 +68,7 @@ export default function MenuPage() {
   const fetchMenuItems = async () => {
     try {
       const response = await fetch(
-        `http://localhost:45000/api/v1/restaurants/${restaurantId}/menu-items`
+        API_ENDPOINTS.restaurants.menuItems(restaurantId)
       );
 
       if (response.ok) {
@@ -86,7 +87,7 @@ export default function MenuPage() {
     try {
       const token = localStorage.getItem("auth-token");
       const response = await fetch(
-        `http://localhost:45000/api/v1/menu-items/${itemId}/availability`,
+        API_ENDPOINTS.menuItems.toggleAvailability(itemId),
         {
           method: "PATCH",
           headers: {
@@ -124,7 +125,7 @@ export default function MenuPage() {
     try {
       const token = localStorage.getItem("auth-token");
       const response = await fetch(
-        `http://localhost:45000/api/v1/menu-items/${itemId}`,
+        API_ENDPOINTS.menuItems.delete(itemId),
         {
           method: "DELETE",
           headers: {
@@ -171,7 +172,7 @@ export default function MenuPage() {
     try {
       const token = localStorage.getItem("auth-token");
       const response = await fetch(
-        `http://localhost:45000/api/v1/menu-items/${selectedItem.id}`,
+        API_ENDPOINTS.menuItems.update(selectedItem.id),
         {
           method: "PUT",
           headers: {

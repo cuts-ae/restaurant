@@ -13,6 +13,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { API_ENDPOINTS } from "@/lib/api";
 
 interface OrderItem {
   id: string;
@@ -91,7 +92,7 @@ export default function OrdersPage() {
     try {
       const token = localStorage.getItem("auth-token");
       const response = await fetch(
-        `http://localhost:45000/api/v1/orders?restaurant_id=${restaurantId}`,
+        API_ENDPOINTS.orders.list(restaurantId),
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -115,7 +116,7 @@ export default function OrdersPage() {
     try {
       const token = localStorage.getItem("auth-token");
       const response = await fetch(
-        `http://localhost:45000/api/v1/orders/${orderId}/status`,
+        API_ENDPOINTS.orders.updateStatus(orderId),
         {
           method: "PATCH",
           headers: {

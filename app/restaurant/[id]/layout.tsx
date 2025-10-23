@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChefHat, Package, BarChart3, LogOut, User } from "lucide-react";
+import { API_ENDPOINTS } from "@/lib/api";
 
 export default function RestaurantLayout({
   children,
@@ -35,7 +36,7 @@ export default function RestaurantLayout({
       try {
         const token = localStorage.getItem("auth-token");
         const response = await fetch(
-          `http://localhost:45000/api/v1/restaurants/${restaurantId}`,
+          API_ENDPOINTS.restaurants.details(restaurantId),
           {
             headers: {
               Authorization: `Bearer ${token}`,

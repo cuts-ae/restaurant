@@ -8,6 +8,7 @@ import {
   Package,
   TrendingUp,
 } from "lucide-react";
+import { API_ENDPOINTS } from "@/lib/api";
 
 interface TopItem {
   menu_item_id: string;
@@ -38,7 +39,7 @@ export default function AnalyticsPage() {
     try {
       const token = localStorage.getItem("auth-token");
       const response = await fetch(
-        `http://localhost:45000/api/v1/restaurants/${restaurantId}/analytics`,
+        API_ENDPOINTS.restaurants.analytics(restaurantId),
         {
           headers: {
             Authorization: `Bearer ${token}`,

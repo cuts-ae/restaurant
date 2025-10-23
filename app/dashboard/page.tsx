@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Building2, ChevronRight, LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { API_ENDPOINTS } from "@/lib/api";
 
 interface Restaurant {
   id: string;
@@ -36,7 +37,7 @@ export default function DashboardPage() {
         }
 
         const response = await fetch(
-          "http://localhost:45000/api/v1/restaurants/my/restaurants",
+          API_ENDPOINTS.restaurants.myRestaurants,
           {
             headers: {
               Authorization: `Bearer ${token}`,
