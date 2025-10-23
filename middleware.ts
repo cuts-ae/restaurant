@@ -2,33 +2,37 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const authToken = request.cookies.get("auth-token");
-  const isAuthenticated = !!authToken;
-  const { pathname } = request.nextUrl;
-  const isLoginPage = pathname === "/login";
-  const isRootPage = pathname === "/";
+  try {
+    const authToken = request.cookies.get("auth-token");
+    const isAuthenticated = !!authToken;
+    const pathname = request.nextUrl.pathname;
+    const isLoginPage = pathname === "/login";
+    const isRootPage = pathname === "/";
 
-  // Redirect root to login if not authenticated
-  if (isRootPage && !isAuthenticated) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    // Redirect root to login if not authenticated
+    if (isRootPage) {
+      if (isAuthenticated) {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+      }
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    // Redirect to login if not authenticated and not on login page
+    if (!isAuthenticated && !isLoginPage) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    // Redirect to dashboard if authenticated and on login page
+    if (isAuthenticated && isLoginPage) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
+    return NextResponse.next();
+  } catch (error) {
+    // If anything fails, allow the request through
+    console.error("Middleware error:", error);
+    return NextResponse.next();
   }
-
-  // Redirect root to dashboard if authenticated
-  if (isRootPage && isAuthenticated) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  // Redirect to login if not authenticated and not on login page
-  if (!isAuthenticated && !isLoginPage) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  // Redirect to dashboard if authenticated and on login page
-  if (isAuthenticated && isLoginPage) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  return NextResponse.next();
 }
 
 export const config = {
