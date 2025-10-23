@@ -63,6 +63,7 @@ export default function MenuPage() {
 
   useEffect(() => {
     fetchMenuItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [restaurantId]);
 
   const fetchMenuItems = async () => {
@@ -363,7 +364,7 @@ export default function MenuPage() {
           <DialogHeader>
             <DialogTitle>Edit Menu Item</DialogTitle>
             <DialogDescription>
-              Update the details of your menu item. Click save when you're done.
+              Update the details of your menu item. Click save when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleEditSubmit}>

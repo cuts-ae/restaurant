@@ -33,6 +33,7 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     fetchAnalytics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [restaurantId]);
 
   const fetchAnalytics = async () => {
@@ -171,7 +172,7 @@ export default function AnalyticsPage() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Today's Performance</p>
+              <p className="text-sm text-muted-foreground">Today&apos;s Performance</p>
               <div className="space-y-1">
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Total Orders:</span>

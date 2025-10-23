@@ -86,6 +86,7 @@ export default function OrdersPage() {
     // Poll for new orders every 10 seconds
     const interval = setInterval(fetchOrders, 10000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [restaurantId]);
 
   const fetchOrders = async () => {
