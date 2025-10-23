@@ -36,14 +36,11 @@ export default function DashboardPage() {
           }
         }
 
-        const response = await fetch(
-          API_ENDPOINTS.restaurants.myRestaurants,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(API_ENDPOINTS.restaurants.myRestaurants, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -130,7 +127,7 @@ export default function DashboardPage() {
               className="group hover:shadow-xl hover:border-primary/20 transition-all duration-300 cursor-pointer hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4"
               style={{ animationDelay: `${index * 100}ms` }}
               onClick={() =>
-                (window.location.href = `/restaurant/${restaurant.id}`)
+                (window.location.href = `/restaurant/@${restaurant.slug}`)
               }
             >
               <CardHeader className="space-y-4">
@@ -170,7 +167,9 @@ export default function DashboardPage() {
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm text-muted-foreground">Revenue</p>
-                    <p className="text-2xl font-bold">{restaurant.revenue || "AED 0"}</p>
+                    <p className="text-2xl font-bold">
+                      {restaurant.revenue || "AED 0"}
+                    </p>
                   </div>
                 </div>
               </CardContent>
