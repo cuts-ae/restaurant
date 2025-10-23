@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   title: "Restaurant Portal - Premium Restaurant Management",
   description:
     "Ultra-premium restaurant management portal for multi-restaurant food delivery platform",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
