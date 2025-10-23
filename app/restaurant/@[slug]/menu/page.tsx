@@ -45,7 +45,7 @@ interface MenuItem {
 
 export default function MenuPage() {
   const params = useParams();
-  const restaurantId = params.id as string;
+  const restaurantSlug = params.slug as string;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -53,6 +53,7 @@ export default function MenuPage() {
   const [updatingItems, setUpdatingItems] = useState<Set<string>>(new Set());
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [restaurantId, setRestaurantId] = useState<string>("");
   const [editForm, setEditForm] = useState({
     name: "",
     description: "",
@@ -62,11 +63,39 @@ export default function MenuPage() {
   });
 
   useEffect(() => {
+    const fetchRestaurantId = async () => {
+      try {
+        const token = localStorage.getItem("auth-token");
+        const response = await fetch(
+          API_ENDPOINTS.restaurants.details(`@${restaurantSlug}`),
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setRestaurantId(data.restaurant?.id || "");
+        }
+      } catch (error) {
+        console.error("Failed to fetch restaurant:", error);
+      }
+    };
+
+    fetchRestaurantId();
+  }, [restaurantSlug]);
+
+  useEffect(() => {
+    if (!restaurantId) return;
     fetchMenuItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [restaurantId]);
 
   const fetchMenuItems = async () => {
+    if (!restaurantId) return;
+
     try {
       const response = await fetch(
         API_ENDPOINTS.restaurants.menuItems(restaurantId)

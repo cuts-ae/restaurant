@@ -74,14 +74,42 @@ const statusConfig = {
 
 export default function OrdersPage() {
   const params = useParams();
-  const restaurantId = params.id as string;
+  const restaurantSlug = params.slug as string;
 
   const [filter, setFilter] = useState<string>("all");
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [updatingOrders, setUpdatingOrders] = useState<Set<string>>(new Set());
+  const [restaurantId, setRestaurantId] = useState<string>("");
 
   useEffect(() => {
+    const fetchRestaurantId = async () => {
+      try {
+        const token = localStorage.getItem("auth-token");
+        const response = await fetch(
+          API_ENDPOINTS.restaurants.details(`@${restaurantSlug}`),
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setRestaurantId(data.restaurant?.id || "");
+        }
+      } catch (error) {
+        console.error("Failed to fetch restaurant:", error);
+      }
+    };
+
+    fetchRestaurantId();
+  }, [restaurantSlug]);
+
+  useEffect(() => {
+    if (!restaurantId) return;
+
     fetchOrders();
     // Poll for new orders every 10 seconds
     const interval = setInterval(fetchOrders, 10000);
@@ -90,6 +118,8 @@ export default function OrdersPage() {
   }, [restaurantId]);
 
   const fetchOrders = async () => {
+    if (!restaurantId) return;
+
     try {
       const token = localStorage.getItem("auth-token");
       const response = await fetch(

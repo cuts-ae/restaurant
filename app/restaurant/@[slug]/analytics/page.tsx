@@ -26,17 +26,46 @@ interface Analytics {
 
 export default function AnalyticsPage() {
   const params = useParams();
-  const restaurantId = params.id as string;
+  const restaurantSlug = params.slug as string;
 
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [restaurantId, setRestaurantId] = useState<string>("");
 
   useEffect(() => {
+    const fetchRestaurantId = async () => {
+      try {
+        const token = localStorage.getItem("auth-token");
+        const response = await fetch(
+          API_ENDPOINTS.restaurants.details(`@${restaurantSlug}`),
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setRestaurantId(data.restaurant?.id || "");
+        }
+      } catch (error) {
+        console.error("Failed to fetch restaurant:", error);
+      }
+    };
+
+    fetchRestaurantId();
+  }, [restaurantSlug]);
+
+  useEffect(() => {
+    if (!restaurantId) return;
     fetchAnalytics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [restaurantId]);
 
   const fetchAnalytics = async () => {
+    if (!restaurantId) return;
+
     try {
       const token = localStorage.getItem("auth-token");
       const response = await fetch(

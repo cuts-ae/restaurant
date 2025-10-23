@@ -6,11 +6,11 @@ import { useParams, useRouter } from "next/navigation";
 export default function RestaurantPage() {
   const params = useParams();
   const router = useRouter();
-  const id = params.id as string;
+  const slug = params.slug as string;
 
   useEffect(() => {
-    router.replace(`/restaurant/${id}/orders`);
-  }, [id, router]);
+    router.replace(`/restaurant/@${slug}/orders`);
+  }, [slug, router]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">

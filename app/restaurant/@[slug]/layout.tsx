@@ -16,7 +16,7 @@ export default function RestaurantLayout({
   const pathname = usePathname();
   const params = useParams();
   const router = useRouter();
-  const restaurantId = params.id as string;
+  const restaurantSlug = params.slug as string;
   const [userEmail, setUserEmail] = useState<string>("");
   const [restaurantName, setRestaurantName] = useState<string>("Loading...");
 
@@ -36,7 +36,7 @@ export default function RestaurantLayout({
       try {
         const token = localStorage.getItem("auth-token");
         const response = await fetch(
-          API_ENDPOINTS.restaurants.details(restaurantId),
+          API_ENDPOINTS.restaurants.details(`@${restaurantSlug}`),
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -55,7 +55,7 @@ export default function RestaurantLayout({
     };
 
     fetchRestaurant();
-  }, [restaurantId]);
+  }, [restaurantSlug]);
 
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
@@ -69,19 +69,19 @@ export default function RestaurantLayout({
       value: "orders",
       label: "Orders",
       icon: Package,
-      href: `/restaurant/${restaurantId}/orders`,
+      href: `/restaurant/@${restaurantSlug}/orders`,
     },
     {
       value: "menu",
       label: "Menu",
       icon: ChefHat,
-      href: `/restaurant/${restaurantId}/menu`,
+      href: `/restaurant/@${restaurantSlug}/menu`,
     },
     {
       value: "analytics",
       label: "Analytics",
       icon: BarChart3,
-      href: `/restaurant/${restaurantId}/analytics`,
+      href: `/restaurant/@${restaurantSlug}/analytics`,
     },
   ];
 
