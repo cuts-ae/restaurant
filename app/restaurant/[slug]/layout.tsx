@@ -16,7 +16,7 @@ export default function RestaurantLayout({
   const pathname = usePathname();
   const params = useParams();
   const router = useRouter();
-  const restaurantSlug = params.slug as string;
+  const restaurantSlug = decodeURIComponent(params.slug as string);
   const [userEmail, setUserEmail] = useState<string>("");
   const [restaurantName, setRestaurantName] = useState<string>("Loading...");
 
@@ -36,7 +36,7 @@ export default function RestaurantLayout({
       try {
         const token = localStorage.getItem("auth-token");
         const response = await fetch(
-          API_ENDPOINTS.restaurants.details(`@${restaurantSlug}`),
+          API_ENDPOINTS.restaurants.details(restaurantSlug),
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -69,27 +69,27 @@ export default function RestaurantLayout({
       value: "orders",
       label: "Orders",
       icon: Package,
-      href: `/restaurant/@${restaurantSlug}/orders`,
+      href: `/restaurant/${restaurantSlug}/orders`,
     },
     {
       value: "menu",
       label: "Menu",
       icon: ChefHat,
-      href: `/restaurant/@${restaurantSlug}/menu`,
+      href: `/restaurant/${restaurantSlug}/menu`,
     },
     {
       value: "analytics",
       label: "Analytics",
       icon: BarChart3,
-      href: `/restaurant/@${restaurantSlug}/analytics`,
+      href: `/restaurant/${restaurantSlug}/analytics`,
     },
   ];
 
-  const activeTab = pathname.includes("/orders")
+  const activeTab = pathname?.includes("/orders")
     ? "orders"
-    : pathname.includes("/menu")
+    : pathname?.includes("/menu")
       ? "menu"
-      : pathname.includes("/analytics")
+      : pathname?.includes("/analytics")
         ? "analytics"
         : "orders";
 

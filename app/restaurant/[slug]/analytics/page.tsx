@@ -26,7 +26,7 @@ interface Analytics {
 
 export default function AnalyticsPage() {
   const params = useParams();
-  const restaurantSlug = params.slug as string;
+  const restaurantSlug = decodeURIComponent(params.slug as string);
 
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +37,7 @@ export default function AnalyticsPage() {
       try {
         const token = localStorage.getItem("auth-token");
         const response = await fetch(
-          API_ENDPOINTS.restaurants.details(`@${restaurantSlug}`),
+          API_ENDPOINTS.restaurants.details(restaurantSlug),
           {
             headers: {
               Authorization: `Bearer ${token}`,

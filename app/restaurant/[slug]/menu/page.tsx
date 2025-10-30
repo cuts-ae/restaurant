@@ -45,7 +45,7 @@ interface MenuItem {
 
 export default function MenuPage() {
   const params = useParams();
-  const restaurantSlug = params.slug as string;
+  const restaurantSlug = decodeURIComponent(params.slug as string);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -67,7 +67,7 @@ export default function MenuPage() {
       try {
         const token = localStorage.getItem("auth-token");
         const response = await fetch(
-          API_ENDPOINTS.restaurants.details(`@${restaurantSlug}`),
+          API_ENDPOINTS.restaurants.details(restaurantSlug),
           {
             headers: {
               Authorization: `Bearer ${token}`,

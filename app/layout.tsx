@@ -18,8 +18,11 @@ export const metadata: Metadata = {
   description:
     "Ultra-premium restaurant management portal for multi-restaurant food delivery platform",
   icons: {
-    icon: "/logo.png",
+    icon: [
+      { url: "/logo.png", type: "image/png" },
+    ],
     apple: "/logo.png",
+    shortcut: "/logo.png",
   },
 };
 

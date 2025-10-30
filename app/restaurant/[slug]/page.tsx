@@ -6,10 +6,12 @@ import { useParams, useRouter } from "next/navigation";
 export default function RestaurantPage() {
   const params = useParams();
   const router = useRouter();
-  const slug = params.slug as string;
+  const slug = decodeURIComponent(params.slug as string);
 
   useEffect(() => {
-    router.replace(`/restaurant/@${slug}/orders`);
+    if (slug) {
+      router.replace(`/restaurant/${slug}/orders`);
+    }
   }, [slug, router]);
 
   return (

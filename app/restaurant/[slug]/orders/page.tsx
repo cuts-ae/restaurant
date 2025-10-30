@@ -74,7 +74,7 @@ const statusConfig = {
 
 export default function OrdersPage() {
   const params = useParams();
-  const restaurantSlug = params.slug as string;
+  const restaurantSlug = decodeURIComponent(params.slug as string);
 
   const [filter, setFilter] = useState<string>("all");
   const [orders, setOrders] = useState<Order[]>([]);
@@ -87,7 +87,7 @@ export default function OrdersPage() {
       try {
         const token = localStorage.getItem("auth-token");
         const response = await fetch(
-          API_ENDPOINTS.restaurants.details(`@${restaurantSlug}`),
+          API_ENDPOINTS.restaurants.details(restaurantSlug),
           {
             headers: {
               Authorization: `Bearer ${token}`,
