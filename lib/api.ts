@@ -1,6 +1,6 @@
 // API configuration for production deployment
 export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
+  process.env.NEXT_PUBLIC_API_URL || "http://34.130.93.201:45000";
 
 export const API_ENDPOINTS = {
   auth: {
