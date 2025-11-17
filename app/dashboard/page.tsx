@@ -135,7 +135,7 @@ export default function DashboardPage() {
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-4xl">
-                      🍽️
+                      R
                     </div>
                     <div className="space-y-1">
                       <CardTitle className="text-2xl">

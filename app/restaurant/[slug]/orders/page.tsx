@@ -111,8 +111,14 @@ export default function OrdersPage() {
     if (!restaurantId) return;
 
     fetchOrders();
-    // Poll for new orders every 10 seconds
-    const interval = setInterval(fetchOrders, 10000);
+
+    // PERFORMANCE: Only poll when page is visible
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchOrders();
+      }
+    }, 10000);
+
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [restaurantId]);
@@ -144,6 +150,15 @@ export default function OrdersPage() {
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     setUpdatingOrders((prev) => new Set(prev).add(orderId));
+
+    // PERFORMANCE: Optimistic update - update UI immediately
+    const previousOrders = [...orders];
+    setOrders((prev) =>
+      prev.map((order) =>
+        order.id === orderId ? { ...order, status: newStatus } : order
+      )
+    );
+
     try {
       const token = localStorage.getItem("auth-token");
       const response = await fetch(
@@ -158,13 +173,15 @@ export default function OrdersPage() {
         }
       );
 
-      if (response.ok) {
-        await fetchOrders();
-      } else {
+      if (!response.ok) {
+        // Revert on error
+        setOrders(previousOrders);
         const error = await response.json();
         alert(`Failed to update order: ${error.error || "Unknown error"}`);
       }
     } catch (error) {
+      // Revert on error
+      setOrders(previousOrders);
       console.error("Failed to update order:", error);
       alert("Failed to update order. Please try again.");
     } finally {
@@ -244,8 +261,7 @@ export default function OrdersPage() {
           return (
             <Card
               key={order.id}
-              className="group hover:shadow-xl transition-all duration-300 hover:scale-[1.01] animate-in fade-in slide-in-from-left-4"
-              style={{ animationDelay: `${index * 50}ms` }}
+              className="group hover:shadow-lg transition-shadow duration-200"
             >
               <CardContent className="p-6">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -290,7 +306,7 @@ export default function OrdersPage() {
                       <div className="space-y-1">
                         {order.order_items.map((item) => (
                           <p key={item.id} className="text-sm text-muted-foreground">
-                            {item.menu_items.name} x{item.quantity}
+                            {item.menu_items?.name || 'Unknown Item'} x{item.quantity}
                             {item.special_instructions && (
                               <span className="text-xs italic">
                                 {" "}

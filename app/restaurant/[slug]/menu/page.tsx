@@ -244,14 +244,14 @@ export default function MenuPage() {
   );
 
   const getCategoryEmoji = (category: string) => {
-    const emojiMap: { [key: string]: string } = {
-      breakfast: "🍳",
-      lunch: "🍽️",
-      dinner: "🍖",
-      snacks: "🥨",
-      beverages: "🥤",
+    const categorySymbols: { [key: string]: string } = {
+      breakfast: "B",
+      lunch: "L",
+      dinner: "D",
+      snacks: "S",
+      beverages: "V",
     };
-    return emojiMap[category.toLowerCase()] || "🍴";
+    return categorySymbols[category.toLowerCase()] || "M";
   };
 
   if (isLoading) {
