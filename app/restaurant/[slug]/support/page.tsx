@@ -3,12 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import SendIcon from "@mui/icons-material/Send";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { cn } from "@/lib/utils";
 import { io, Socket } from "socket.io-client";
+import { ChatSessionList } from "@/components/chat-session-list";
+import { NewChatDialog } from "@/components/new-chat-dialog";
+import { ChatInterface } from "@/components/chat-interface";
+import AddIcon from "@mui/icons-material/Add";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface Message {
   id: string;
@@ -18,7 +20,7 @@ interface Message {
   message_type: "text" | "image" | "file" | "system";
   is_system_message: boolean;
   created_at: string;
-  attachments?: any[];
+  attachments?: unknown[];
 }
 
 interface ChatSession {
@@ -26,90 +28,98 @@ interface ChatSession {
   subject: string;
   status: "waiting" | "active" | "closed";
   created_at: string;
+  updated_at: string;
   restaurant_id: string;
+  last_message_preview?: string;
+  unread_count?: number;
 }
 
 export default function SupportPage() {
   const params = useParams();
   const slug = params.slug as string;
 
+  // Sessions state
+  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
+  const [isLoadingSessions, setIsLoadingSessions] = useState(true);
+  const [sessionsError, setSessionsError] = useState<string | null>(null);
+
+  // Messages state
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+
+  // Chat state
   const [sessionStatus, setSessionStatus] = useState<"waiting" | "active" | "closed">("waiting");
   const [isConnected, setIsConnected] = useState(false);
   const [typingUser, setTypingUser] = useState<string | null>(null);
+  const [isCreatingSession, setIsCreatingSession] = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  // New chat dialog
+  const [isNewChatOpen, setIsNewChatOpen] = useState(false);
+
+  // Refs
   const socketRef = useRef<Socket | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
+  // Fetch all sessions on mount
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    fetchSessions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
 
+  // Connect to socket when a session is selected
   useEffect(() => {
-    const initializeChat = async () => {
-      const token = localStorage.getItem("auth-token");
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-
-      if (!token || !user.id) {
-        console.error("No authentication token or user found");
-        return;
-      }
-
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
-
-        const response = await fetch(`${apiUrl}/api/v1/chat/sessions/my`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const sessions = await response.json();
-          const activeSession = sessions.find(
-            (s: ChatSession) => s.status !== "closed" && s.restaurant_id === slug
-          );
-
-          if (activeSession) {
-            setSessionId(activeSession.id);
-            setSessionStatus(activeSession.status);
-          } else {
-            await createNewSession(token, slug);
-          }
-        } else {
-          await createNewSession(token, slug);
-        }
-      } catch (error) {
-        console.error("Error initializing chat:", error);
-        await createNewSession(token, slug);
-      }
-    };
-
-    initializeChat();
+    if (selectedSessionId) {
+      connectToSocket(selectedSessionId);
+    }
 
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
+        socketRef.current = null;
       }
     };
-  }, [slug]);
+  }, [selectedSessionId]);
 
-  useEffect(() => {
-    if (sessionId) {
-      connectToSocket();
+  const fetchSessions = async () => {
+    setIsLoadingSessions(true);
+    setSessionsError(null);
+
+    try {
+      const token = localStorage.getItem("auth-token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
+      const response = await fetch(`${apiUrl}/api/v1/chat/sessions/my`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch sessions");
+      }
+
+      const data = await response.json();
+      const restaurantSessions = data.filter(
+        (s: ChatSession) => s.restaurant_id === slug
+      );
+      setSessions(restaurantSessions);
+    } catch (error) {
+      console.error("Error fetching sessions:", error);
+      setSessionsError(error instanceof Error ? error.message : "Failed to load sessions");
+      setSessions([]);
+    } finally {
+      setIsLoadingSessions(false);
     }
-  }, [sessionId]);
+  };
 
-  const createNewSession = async (token: string, restaurantId: string) => {
+  const createNewSession = async (subject: string, initialMessage: string) => {
+    setIsCreatingSession(true);
+    const token = localStorage.getItem("auth-token");
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
 
     try {
@@ -120,25 +130,45 @@ export default function SupportPage() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          subject: "Restaurant Support Request",
+          subject,
           category: "restaurant_support",
           priority: "medium",
-          restaurant_id: restaurantId,
-          initial_message: "Hello, I need assistance with my restaurant.",
+          restaurant_id: slug,
+          initial_message: initialMessage,
         }),
       });
 
-      if (response.ok) {
-        const session = await response.json();
-        setSessionId(session.id);
-        setSessionStatus(session.status);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create chat session");
       }
+
+      const session = await response.json();
+
+      // Wait for session to be fully created before proceeding
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Refresh sessions list
+      await fetchSessions();
+
+      // Select the new session
+      setSelectedSessionId(session.id);
+      setSessionStatus(session.status);
     } catch (error) {
       console.error("Error creating chat session:", error);
+      throw error;
+    } finally {
+      setIsCreatingSession(false);
     }
   };
 
-  const connectToSocket = () => {
+  const connectToSocket = (sessionId: string) => {
+    // Disconnect existing socket if any
+    if (socketRef.current) {
+      socketRef.current.disconnect();
+      socketRef.current = null;
+    }
+
     const token = localStorage.getItem("auth-token");
     const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "http://localhost:45000";
 
@@ -151,9 +181,8 @@ export default function SupportPage() {
       console.log("Connected to chat server");
       setIsConnected(true);
 
-      if (sessionId) {
-        socket.emit("join_session", { session_id: sessionId });
-      }
+      // Join the session after connection is established
+      socket.emit("join_session", { session_id: sessionId });
     });
 
     socket.on("disconnect", () => {
@@ -165,6 +194,7 @@ export default function SupportPage() {
       console.log("Joined session:", data);
       setMessages(data.messages || []);
       setSessionStatus(data.session.status);
+      setIsLoadingMessages(false);
     });
 
     socket.on("new_message", (data) => {
@@ -206,15 +236,34 @@ export default function SupportPage() {
     socketRef.current = socket;
   };
 
+  const handleSessionSelect = (sessionId: string) => {
+    setSelectedSessionId(sessionId);
+    setIsLoadingMessages(true);
+    setMessages([]);
+
+    const session = sessions.find(s => s.id === sessionId);
+    if (session) {
+      setSessionStatus(session.status);
+    }
+  };
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!inputMessage.trim() || !socketRef.current || !sessionId) return;
+    if (!inputMessage.trim() || !socketRef.current || !selectedSessionId) {
+      return;
+    }
+
+    // Check if connected
+    if (!isConnected) {
+      console.error("Not connected to chat server");
+      return;
+    }
 
     const tempId = Date.now().toString();
 
     socketRef.current.emit("send_message", {
-      session_id: sessionId,
+      session_id: selectedSessionId,
       content: inputMessage,
       message_type: "text",
       temp_id: tempId,
@@ -222,22 +271,22 @@ export default function SupportPage() {
 
     setInputMessage("");
 
-    if (socketRef.current && sessionId) {
-      socketRef.current.emit("stop_typing", { session_id: sessionId });
+    if (socketRef.current && selectedSessionId) {
+      socketRef.current.emit("stop_typing", { session_id: selectedSessionId });
     }
   };
 
   const handleTyping = () => {
-    if (socketRef.current && sessionId) {
-      socketRef.current.emit("typing", { session_id: sessionId });
+    if (socketRef.current && selectedSessionId && isConnected) {
+      socketRef.current.emit("typing", { session_id: selectedSessionId });
 
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
 
       typingTimeoutRef.current = setTimeout(() => {
-        if (socketRef.current && sessionId) {
-          socketRef.current.emit("stop_typing", { session_id: sessionId });
+        if (socketRef.current && selectedSessionId) {
+          socketRef.current.emit("stop_typing", { session_id: selectedSessionId });
         }
       }, 3000);
     }
@@ -245,17 +294,16 @@ export default function SupportPage() {
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !sessionId) return;
+    if (!file || !selectedSessionId) return;
 
     const token = localStorage.getItem("auth-token");
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("session_id", sessionId);
+    formData.append("session_id", selectedSessionId);
 
     try {
-      setIsLoading(true);
       const response = await fetch(`${apiUrl}/api/v1/chat/upload`, {
         method: "POST",
         headers: {
@@ -270,10 +318,10 @@ export default function SupportPage() {
       }
     } catch (error) {
       console.error("Error uploading file:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
+
+  const selectedSession = sessions.find(s => s.id === selectedSessionId);
 
   return (
     <div className="space-y-6">
@@ -284,124 +332,140 @@ export default function SupportPage() {
             Get help with your restaurant portal or connect with our support team
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <div
-            className={cn(
-              "h-2 w-2 rounded-full",
-              isConnected ? "bg-green-500" : "bg-red-500"
-            )}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div
+              className={cn(
+                "h-2 w-2 rounded-full",
+                isConnected ? "bg-green-500" : "bg-red-500"
+              )}
+            />
+            <span className="text-sm text-gray-600">
+              {isConnected ? "Connected" : "Disconnected"}
+            </span>
+          </div>
+          <NewChatDialog
+            onCreateChat={createNewSession}
+            isOpen={isNewChatOpen}
+            onOpenChange={setIsNewChatOpen}
+            trigger={
+              <Button className="gap-2" disabled={isCreatingSession}>
+                {isCreatingSession ? (
+                  <>
+                    <CircularProgress size={16} className="text-current" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <AddIcon sx={{ fontSize: 20 }} />
+                    New Chat
+                  </>
+                )}
+              </Button>
+            }
           />
-          <span className="text-sm text-gray-600">
-            {isConnected ? "Connected" : "Disconnected"}
-          </span>
-          {sessionStatus === "waiting" && (
-            <span className="ml-4 text-sm bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">
-              Waiting for support...
-            </span>
-          )}
-          {sessionStatus === "active" && (
-            <span className="ml-4 text-sm bg-green-100 text-green-800 px-3 py-1 rounded-full">
-              Active
-            </span>
-          )}
         </div>
       </div>
 
-      <Card className="bg-white rounded-xl shadow-sm border border-border/40 overflow-hidden">
-        <div className="flex flex-col h-[600px]">
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
-            {messages.length === 0 && (
-              <div className="flex items-center justify-center h-full text-gray-500">
-                <p>No messages yet. Start the conversation!</p>
-              </div>
-            )}
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={cn(
-                  "flex",
-                  message.sender_role === "customer" ? "justify-end" : "justify-start"
-                )}
-              >
-                <div
-                  className={cn(
-                    "max-w-[70%] rounded-lg px-4 py-2",
-                    message.is_system_message
-                      ? "bg-gray-100 text-gray-600 text-center w-full max-w-full"
-                      : message.sender_role === "customer"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-foreground"
-                  )}
-                >
-                  <p className="text-sm">{message.content}</p>
-                  {!message.is_system_message && (
-                    <p className="text-xs opacity-70 mt-1">
-                      {new Date(message.created_at).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                  )}
+      <div className="grid grid-cols-[30%_70%] gap-6 h-[700px]">
+        {/* Left Panel - Sessions List */}
+        <Card className="bg-white rounded-xl shadow-sm border border-border/40 overflow-hidden">
+          <div className="flex flex-col h-full">
+            <div className="border-b border-border/40 p-4">
+              <h3 className="font-semibold text-lg">Conversations</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                {sessions.length} {sessions.length === 1 ? "conversation" : "conversations"}
+              </p>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              {sessionsError ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+                  <p className="text-sm text-destructive mb-4">{sessionsError}</p>
+                  <Button onClick={fetchSessions} size="sm" variant="outline">
+                    Retry
+                  </Button>
                 </div>
-              </div>
-            ))}
-            {typingUser && (
-              <div className="flex justify-start">
-                <div className="bg-muted rounded-lg px-4 py-2">
-                  <p className="text-sm text-muted-foreground">
-                    {typingUser} is typing...
-                  </p>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
+              ) : (
+                <ChatSessionList
+                  sessions={sessions}
+                  selectedSessionId={selectedSessionId}
+                  onSessionSelect={handleSessionSelect}
+                  isLoading={isLoadingSessions}
+                />
+              )}
+            </div>
           </div>
+        </Card>
 
-          <div className="border-t border-border/40 p-4 bg-muted/10">
-            <form onSubmit={handleSendMessage} className="flex gap-2">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileUpload}
-                className="hidden"
-                accept="image/*,.pdf,.doc,.docx"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isLoading || sessionStatus === "closed"}
-              >
-                <AttachFileIcon sx={{ fontSize: 20 }} />
-              </Button>
-              <Input
-                value={inputMessage}
-                onChange={(e) => {
-                  setInputMessage(e.target.value);
-                  handleTyping();
-                }}
-                placeholder={
-                  sessionStatus === "closed"
-                    ? "Chat is closed"
-                    : sessionStatus === "waiting"
-                    ? "Waiting for support agent..."
-                    : "Type your message..."
-                }
-                className="flex-1"
-                disabled={isLoading || sessionStatus === "closed"}
-              />
-              <Button
-                type="submit"
-                disabled={!inputMessage.trim() || isLoading || sessionStatus === "closed"}
-                size="icon"
-              >
-                <SendIcon sx={{ fontSize: 20 }} />
-              </Button>
-            </form>
+        {/* Right Panel - Chat Interface */}
+        <Card className="bg-white rounded-xl shadow-sm border border-border/40 overflow-hidden">
+          <div className="flex flex-col h-full">
+            {selectedSessionId && selectedSession ? (
+              <>
+                <div className="border-b border-border/40 p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-lg truncate">
+                        {selectedSession.subject}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Status: <span className="capitalize">{sessionStatus.replace("_", " ")}</span>
+                      </p>
+                    </div>
+                    {sessionStatus === "waiting" && (
+                      <div className="flex items-center gap-2 bg-yellow-50 text-yellow-700 px-3 py-1.5 rounded-full text-sm border border-yellow-200">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                        </span>
+                        Waiting for agent
+                      </div>
+                    )}
+                    {sessionStatus === "active" && (
+                      <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-full text-sm border border-green-200">
+                        <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                        Active
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {isLoadingMessages ? (
+                  <div className="flex-1 flex items-center justify-center">
+                    <CircularProgress size={32} className="text-muted-foreground" />
+                  </div>
+                ) : (
+                  <ChatInterface
+                    messages={messages}
+                    inputMessage={inputMessage}
+                    onInputChange={setInputMessage}
+                    onSendMessage={handleSendMessage}
+                    onFileUpload={handleFileUpload}
+                    onTyping={handleTyping}
+                    sessionStatus={sessionStatus}
+                    isConnected={isConnected}
+                    typingUser={typingUser}
+                    disabled={!isConnected}
+                  />
+                )}
+              </>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
+                <div className="rounded-full bg-muted p-6 mb-6">
+                  <AddIcon sx={{ fontSize: 48 }} className="text-muted-foreground" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">No conversation selected</h3>
+                <p className="text-sm text-muted-foreground max-w-md mb-6">
+                  Select a conversation from the list or start a new one to begin chatting with our support team
+                </p>
+                <Button onClick={() => setIsNewChatOpen(true)} className="gap-2">
+                  <AddIcon sx={{ fontSize: 20 }} />
+                  Start New Conversation
+                </Button>
+              </div>
+            )}
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }
