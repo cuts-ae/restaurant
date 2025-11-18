@@ -1,0 +1,44 @@
+
+========================================
+STEP 1: Navigate to login page
+========================================
+
+[CONSOLE INFO]: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+
+========================================
+STEP 2: Login with owner1@cuts.ae
+========================================
+
+
+[API REQUEST]: OPTIONS http://localhost:45000/api/v1/auth/login
+
+[API REQUEST]: POST http://localhost:45000/api/v1/auth/login
+[POST DATA]: {"email":"owner1@cuts.ae","password":"password123"}
+[API RESPONSE]: Could not read body
+[API RESPONSE]: 200 http://localhost:45000/api/v1/auth/login
+[RESPONSE BODY]: {"message":"Login successful","user":{"id":"11111111-1111-1111-1111-111111111111","email":"owner1@cuts.ae","first_name":"Ahmed","last_name":"Al Maktoum","role":"restaurant_owner"},"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMTExMTExMS0xMTExLTExMTEtMTExMS0xMTExMTExMTExMTEiLCJlbWFpbCI6Im93bmVyMUBjdXRzLmFlIiwicm9sZSI6InJlc3RhdXJhbnRfb3duZXIiLCJpYXQiOjE3NjM1MDYyNDYsImV4cCI6MTc2NDExMTA0Nn0.arf77GcZdMnDH7azK0pfglgA-G3RPwaGqosrkmvdqNU"}
+[CONSOLE INFO]: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+
+[API REQUEST]: GET http://localhost:45000/api/v1/restaurants/my/restaurants
+
+[API REQUEST]: OPTIONS http://localhost:45000/api/v1/restaurants/my/restaurants
+[API RESPONSE]: Could not read body
+[API RESPONSE]: 200 http://localhost:45000/api/v1/restaurants/my/restaurants
+[RESPONSE BODY]: {"restaurants":[{"id":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa","owner_id":"11111111-1111-1111-1111-111111111111","name":"Fit & Fresh Abu Dhabi","slug":"fitfresh-abudhabi","logo_url":null,"banner_url":null,"description":"Premium healthy meal prep and catering service focusing on balanced nutrition and fresh ingredients","cuisine_type":["Healthy","Mediterranean","Protein-Rich"],"address":{"city":"Abu Dhabi","street":"Al Maryah Island","country":"UAE","emirate":"Abu Dhabi","postal_code":"12345"},"phone":"+971501234501","email":"contact@fitfresh.ae","commission_rate":"0.1500","is_active":true,"operating_hours":{"friday":{"open":"07:00","close":"23:00"},"monday":{"open":"06:00","close":"22:00"},"sunday":{"open":"07:00","close":"22:00"},"tuesday":{"open":"06:00","close":"22:00"},"saturday":{"open":"07:00","close":"23:00"},"thursday":{"open":"06:00","close":"22:00"},"wednesday":{"open":"06:00","close":"22:00"}},"average_prep_time":25,"created_at":"2025-11-17T23:34:51.780Z","updated_at":"2025-11-17T23:34:51.780Z","icon":"🥗","operating_status":"open","ordersToday":7,"revenue":"AED 861.70"},{"id":"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb","owner_id":"11111111-1111-1111-1111-111111111111","name":"Protein Hub Dubai","slug":"proteinhub-dubai","logo_url":null,"banner_url":null,"description":"High-protein meals for athletes, fitness enthusiasts, and health-conscious individuals","cuisine_type":["Healthy","High-Protein","Fitness"],"address":{"city":"Dubai","street":"Dubai Marina","country":"UAE","emirate":"Dubai","postal_code":"23456"},"phone":"+971501234502","email":"hello@proteinhub.ae","commission_rate":"0.1500","is_active":true,"operating_hours":{"friday":{"open":"06:00","close":"21:00"},"monday":{"open":"06:00","close":"21:00"},"sunday":{"open":"07:00","close":"22:00"},"tuesday":{"open":"06:00","close":"21:00"},"saturday":{"open":"07:00","close":"22:00"},"thursday":{"open":"06:00","close":"21:00"},"wednesday":{"open":"06:00","close":"21:00"}},"average_prep_time":20,"created_at":"2025-11-17T23:34:51.780Z","updated_at":"2025-11-17T23:34:51.780Z","icon":"🍜","operating_status":"open","ordersToday":4,"revenue":"AED 640.20"},{"id":"cccccccc-cccc-cccc-cccc-cccccccccccc","owner_id":"11111111-1111-1111-1111-111111111111","name":"Green Bowl Sharjah","slug":"greenbowl-sharjah","logo_url":null,"banner_url":null,"description":"Plant-based, organic meals with complete nutritional profiles for mindful eating","cuisine_type":["Vegan","Organic","Plant-Based"],"address":{"city":"Sharjah","street":"Al Majaz Waterfront","country":"UAE","emirate":"Sharjah","postal_code":"34567"},"phone":"+971501234503","email":"info@greenbowl.ae","commission_rate":"0.1500","is_active":true,"operating_hours":{"friday":{"open":"08:00","close":"23:00"},"monday":{"open":"08:00","close":"22:00"},"sunday":{"open":"08:00","close":"22:00"},"tuesday":{"open":"08:00","close":"22:00"},"saturday":{"open":"08:00","close":"23:00"},"thursday":{"open":"08:00","close":"22:00"},"wednesday":{"open":"08:00","close":"22:00"}},"average_prep_time":30,"created_at":"2025-11-17T23:34:51.780Z","updated_at":"2025-11-17T23:34:51.780Z","icon":"🍱","operating_status":"open","ordersToday":5,"revenue":"AED 489.95"}]}
+
+========================================
+STEP 3: Click on first restaurant
+========================================
+
+Found 3 restaurant cards, clicking first one
+
+
+ERROR during test: Waiting failed: 10000ms exceeded
+TimeoutError: Waiting failed: 10000ms exceeded
+    at new WaitTask (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/common/WaitTask.js:49:34)
+    at IsolatedWorld.waitForFunction (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/api/Realm.js:25:26)
+    at CdpFrame.waitForFunction (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/api/Frame.js:583:43)
+    at CdpFrame.<anonymous> (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/util/decorators.js:109:27)
+    at CdpPage.waitForFunction (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/api/Page.js:1437:37)
+    at testChatCreation (/Users/sour/Projects/cuts.ae/restaurant/test-chat-creation.js:92:14)
+Error screenshot saved to error-screenshot.png

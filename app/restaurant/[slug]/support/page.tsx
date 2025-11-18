@@ -88,13 +88,20 @@ export default function SupportPage() {
         }
 
         const data = await response.json();
+        console.log("=== Restaurant API Response ===");
+        console.log("Full response:", JSON.stringify(data, null, 2));
+
         const restaurant = data.restaurant || data;
 
         if (!restaurant || !restaurant.id) {
+          console.error("Invalid restaurant data! restaurant object:", restaurant);
           throw new Error("Invalid restaurant data received");
         }
 
-        console.log("Loaded restaurant:", restaurant.id, "for slug:", slug);
+        console.log("=== Setting Restaurant ID ===");
+        console.log("Restaurant UUID:", restaurant.id);
+        console.log("UUID type:", typeof restaurant.id);
+        console.log("Slug was:", slug);
         setRestaurantId(restaurant.id);
       } catch (error) {
         console.error("Error fetching restaurant:", error);
@@ -183,7 +190,13 @@ export default function SupportPage() {
   };
 
   const createNewSession = async (subject: string, initialMessage: string) => {
+    console.log("=== createNewSession called ===");
+    console.log("restaurantId state value:", restaurantId);
+    console.log("restaurantId type:", typeof restaurantId);
+    console.log("slug param:", slug);
+
     if (!restaurantId) {
+      console.error("Restaurant ID not loaded! Current value:", restaurantId);
       throw new Error("Restaurant ID not loaded");
     }
 
@@ -191,8 +204,18 @@ export default function SupportPage() {
     const token = localStorage.getItem("auth-token");
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
 
+    const requestBody = {
+      subject,
+      category: "restaurant_support",
+      priority: "medium",
+      restaurant_id: restaurantId,
+      initial_message: initialMessage,
+    };
+
     try {
-      console.log("Creating new chat session:", { subject, restaurant_id: restaurantId });
+      console.log("=== Creating new chat session ===");
+      console.log("Request body:", JSON.stringify(requestBody, null, 2));
+      console.log("restaurant_id being sent:", requestBody.restaurant_id);
 
       const response = await fetch(`${apiUrl}/api/v1/chat/sessions`, {
         method: "POST",
@@ -200,13 +223,7 @@ export default function SupportPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          subject,
-          category: "restaurant_support",
-          priority: "medium",
-          restaurant_id: restaurantId,
-          initial_message: initialMessage,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {

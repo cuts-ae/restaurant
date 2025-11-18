@@ -24,48 +24,48 @@ export default function SupportDashboardPage() {
       title: "Open Tickets",
       value: "12",
       icon: MessageSquare,
-      color: "text-blue-500",
-      bgColor: "bg-blue-50",
+      color: "text-gray-700",
+      bgColor: "bg-gray-100",
       description: "Active support tickets",
     },
     {
       title: "Total Customers",
       value: "48",
       icon: Users,
-      color: "text-green-500",
-      bgColor: "bg-green-50",
+      color: "text-gray-700",
+      bgColor: "bg-gray-100",
       description: "Registered customers",
     },
     {
       title: "Resolved Today",
       value: "7",
       icon: CheckCircle,
-      color: "text-emerald-500",
-      bgColor: "bg-emerald-50",
+      color: "text-gray-700",
+      bgColor: "bg-gray-100",
       description: "Tickets resolved",
     },
     {
       title: "Avg Response Time",
       value: "2.5h",
       icon: Clock,
-      color: "text-amber-500",
-      bgColor: "bg-amber-50",
+      color: "text-gray-700",
+      bgColor: "bg-gray-100",
       description: "Average time to respond",
     },
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="support-page-header">
-        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-br from-gray-900 via-gray-800 to-gray-600 bg-clip-text text-transparent">
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
           Welcome back, {userName}
         </h1>
-        <p className="text-muted-foreground mt-2">
-          Here&apos;s an overview of your support activities
+        <p className="text-sm text-gray-600 mt-1">
+          Overview of your support activities
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -76,17 +76,17 @@ export default function SupportDashboardPage() {
                 animationDelay: `${index * 100}ms`,
               }}
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600">
                   {stat.title}
                 </CardTitle>
-                <div className={`${stat.bgColor} p-2.5 rounded-xl shadow-sm`}>
+                <div className={`${stat.bgColor} p-2 rounded-md`}>
                   <Icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold tracking-tight">{stat.value}</div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <div className="text-2xl font-semibold tracking-tight text-gray-900">{stat.value}</div>
+                <p className="text-xs text-gray-500 mt-1">
                   {stat.description}
                 </p>
               </CardContent>
@@ -97,19 +97,19 @@ export default function SupportDashboardPage() {
 
       <Card className="support-info-card">
         <CardHeader>
-          <CardTitle className="text-xl">Support Portal Information</CardTitle>
+          <CardTitle className="text-lg font-semibold text-gray-900">Support Portal Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="support-info-box support-info-box-blue">
             <div className="flex items-start gap-3">
               <div className="support-info-icon-wrapper support-info-icon-blue">
-                <MessageSquare className="h-5 w-5 text-blue-600" />
+                <MessageSquare className="h-4 w-4 text-gray-700" />
               </div>
               <div>
-                <h3 className="font-semibold text-blue-900">
+                <h3 className="font-medium text-sm text-gray-900">
                   Support Portal Active
                 </h3>
-                <p className="text-sm text-blue-700 mt-1">
+                <p className="text-sm text-gray-600 mt-1 leading-relaxed">
                   You have access to the support portal. Use the navigation menu
                   to access tickets, customer information, and reports.
                 </p>
@@ -117,9 +117,9 @@ export default function SupportDashboardPage() {
             </div>
           </div>
 
-          <div className="space-y-3">
-            <h3 className="font-semibold text-lg">Quick Actions</h3>
-            <ul className="space-y-3 text-sm text-muted-foreground">
+          <div className="space-y-2.5">
+            <h3 className="font-medium text-sm text-gray-900">Quick Actions</h3>
+            <ul className="space-y-1.5 text-sm text-gray-600">
               <li className="support-quick-action">
                 <div className="support-quick-action-dot" />
                 <span>View and respond to customer tickets</span>
@@ -138,13 +138,13 @@ export default function SupportDashboardPage() {
           <div className="support-info-box support-info-box-amber">
             <div className="flex items-start gap-3">
               <div className="support-info-icon-wrapper support-info-icon-amber">
-                <Clock className="h-5 w-5 text-amber-600" />
+                <Clock className="h-4 w-4 text-gray-700" />
               </div>
               <div>
-                <h3 className="font-semibold text-amber-900">
+                <h3 className="font-medium text-sm text-gray-900">
                   Note: Demo Environment
                 </h3>
-                <p className="text-sm text-amber-700 mt-1">
+                <p className="text-sm text-gray-600 mt-1 leading-relaxed">
                   This is a demonstration support portal. In production, this
                   would connect to your ticket management system and customer
                   database.

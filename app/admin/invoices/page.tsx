@@ -385,7 +385,7 @@ export default function AdminInvoicesPage() {
 
   // Apply all filters
   const filteredInvoices = useMemo(() => {
-    let filtered = invoices.filter((invoice) => {
+    const filtered = invoices.filter((invoice) => {
       // Search filter
       const matchesSearch =
         invoice.invoiceNumber

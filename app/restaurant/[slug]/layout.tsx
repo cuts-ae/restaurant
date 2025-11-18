@@ -81,7 +81,7 @@ export default function RestaurantLayout({
 
         if (response.ok) {
           const data = await response.json();
-          const restaurant = data.restaurants?.find((r: any) => r.slug === cleanSlug);
+          const restaurant = data.restaurants?.find((r: { slug: string }) => r.slug === cleanSlug);
           if (restaurant) {
             setRestaurantName(restaurant.name || "Restaurant");
             setRestaurantId(restaurant.id || "");

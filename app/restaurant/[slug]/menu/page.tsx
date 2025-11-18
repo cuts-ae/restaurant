@@ -143,7 +143,7 @@ export default function MenuPage() {
         if (response.ok) {
           const data = await response.json();
           const restaurant = data.restaurants?.find(
-            (r: any) => r.slug === cleanSlug,
+            (r: { slug: string }) => r.slug === cleanSlug,
           );
           if (restaurant) {
             setRestaurantId(restaurant.id);

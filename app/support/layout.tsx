@@ -107,43 +107,43 @@ export default function SupportLayout({
       <div className="support-header-glass sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-8 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <div className="relative support-logo-container">
                 <img
                   src="/logo.png"
                   alt="Logo"
-                  className="w-12 h-12 object-contain relative z-10"
+                  className="w-10 h-10 object-contain relative z-10"
                 />
               </div>
               <div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-lg font-semibold tracking-tight text-gray-900">
                     Support Portal
                   </span>
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200">
+                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-gray-100 border border-gray-200">
                     <div className="support-status-dot"></div>
-                    <span className="text-xs font-semibold text-emerald-700">
-                      Connected
+                    <span className="text-xs font-medium text-gray-700">
+                      Live
                     </span>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-0.5">
+                <p className="text-xs text-gray-500 mt-0.5">
                   Customer Support Dashboard
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <div className="support-user-badge">
-                <User className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm font-medium">{userEmail}</span>
+                <User className="w-3.5 h-3.5 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">{userEmail}</span>
               </div>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleLogout}
-                className="gap-2 support-logout-btn"
+                className="gap-2 support-logout-btn text-sm"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-3.5 h-3.5" />
                 Logout
               </Button>
             </div>
@@ -153,8 +153,8 @@ export default function SupportLayout({
 
       <div className="flex max-w-7xl mx-auto relative">
         {/* Sidebar */}
-        <aside className="w-64 min-h-screen p-6 support-sidebar-glass">
-          <nav className="space-y-2">
+        <aside className="w-56 min-h-screen px-4 py-6 support-sidebar-glass">
+          <nav className="space-y-1">
             {navItems.map((item, index) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -169,8 +169,8 @@ export default function SupportLayout({
                     animationDelay: `${index * 50}ms`,
                   }}
                 >
-                  <Icon className="w-5 h-5" />
-                  <span className="font-medium">{item.label}</span>
+                  <Icon className="w-4 h-4" />
+                  <span>{item.label}</span>
                   {isActive && <div className="support-nav-active-indicator"></div>}
                 </Link>
               );
@@ -178,13 +178,13 @@ export default function SupportLayout({
           </nav>
 
           {/* Sidebar Footer Decoration */}
-          <div className="mt-12 pt-6 border-t border-border/20">
+          <div className="mt-auto pt-6">
             <div className="support-sidebar-decoration">
-              <div className="text-xs text-muted-foreground/60 font-medium">
-                Agent Support
+              <div className="text-xs text-gray-500 font-medium">
+                Support Portal
               </div>
-              <div className="text-xs text-muted-foreground/40 mt-1">
-                v2.0.1
+              <div className="text-xs text-gray-400 mt-0.5">
+                v2.0
               </div>
             </div>
           </div>
