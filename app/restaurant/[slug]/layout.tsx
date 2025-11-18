@@ -1,12 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChefHat, Package, BarChart3, LogOut, User } from "lucide-react";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+import ChatIcon from "@mui/icons-material/Chat";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { API_ENDPOINTS } from "@/lib/api";
+import { RestaurantStatusToggle } from "@/components/restaurant-status-toggle";
 
 export default function RestaurantLayout({
   children,
@@ -17,10 +24,26 @@ export default function RestaurantLayout({
   const params = useParams();
   const router = useRouter();
   const restaurantSlug = decodeURIComponent(params.slug as string);
+  // Remove @ from slug for localStorage key
+  const cleanSlug = useMemo(
+    () =>
+      restaurantSlug.startsWith("@")
+        ? restaurantSlug.slice(1)
+        : restaurantSlug,
+    [restaurantSlug]
+  );
   const [userEmail, setUserEmail] = useState<string>("");
   const [restaurantName, setRestaurantName] = useState<string>("Loading...");
+  const [restaurantId, setRestaurantId] = useState<string>("");
+  const [operatingStatus, setOperatingStatus] = useState<"open" | "not_accepting_orders" | "closed">("open");
 
   useEffect(() => {
+    const token = localStorage.getItem("auth-token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
     const user = localStorage.getItem("user");
     if (user) {
       try {
@@ -31,22 +54,39 @@ export default function RestaurantLayout({
       }
     }
 
-    // Fetch restaurant details
+    // Get restaurant from localStorage first (use cleanSlug without @)
+    const restaurantData = localStorage.getItem(`restaurant-${cleanSlug}`);
+    if (restaurantData) {
+      try {
+        const restaurant = JSON.parse(restaurantData);
+        setRestaurantName(restaurant.name || "Restaurant");
+        setRestaurantId(restaurant.id || "");
+        setOperatingStatus(restaurant.operating_status || "open");
+        return;
+      } catch (error) {
+        console.error("Failed to parse restaurant data:", error);
+      }
+    }
+
+    // Fallback: Fetch from API if not in localStorage
     const fetchRestaurant = async () => {
       try {
         const token = localStorage.getItem("auth-token");
-        const response = await fetch(
-          API_ENDPOINTS.restaurants.details(restaurantSlug),
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(API_ENDPOINTS.restaurants.myRestaurants, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
-          setRestaurantName(data.restaurant?.name || "Restaurant");
+          const restaurant = data.restaurants?.find((r: any) => r.slug === cleanSlug);
+          if (restaurant) {
+            setRestaurantName(restaurant.name || "Restaurant");
+            setRestaurantId(restaurant.id || "");
+            setOperatingStatus(restaurant.operating_status || "open");
+            localStorage.setItem(`restaurant-${cleanSlug}`, JSON.stringify(restaurant));
+          }
         }
       } catch (error) {
         console.error("Failed to fetch restaurant:", error);
@@ -55,7 +95,7 @@ export default function RestaurantLayout({
     };
 
     fetchRestaurant();
-  }, [restaurantSlug]);
+  }, [cleanSlug, router]);
 
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
@@ -68,20 +108,26 @@ export default function RestaurantLayout({
     {
       value: "orders",
       label: "Orders",
-      icon: Package,
+      icon: LocalShippingIcon,
       href: `/restaurant/${restaurantSlug}/orders`,
     },
     {
       value: "menu",
       label: "Menu",
-      icon: ChefHat,
+      icon: RestaurantIcon,
       href: `/restaurant/${restaurantSlug}/menu`,
     },
     {
       value: "analytics",
       label: "Analytics",
-      icon: BarChart3,
+      icon: BarChartIcon,
       href: `/restaurant/${restaurantSlug}/analytics`,
+    },
+    {
+      value: "support",
+      label: "Support",
+      icon: ChatIcon,
+      href: `/restaurant/${restaurantSlug}/support`,
     },
   ];
 
@@ -91,7 +137,9 @@ export default function RestaurantLayout({
       ? "menu"
       : pathname?.includes("/analytics")
         ? "analytics"
-        : "orders";
+        : pathname?.includes("/support")
+          ? "support"
+          : "orders";
 
   return (
     <div className="min-h-screen bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.03),rgba(255,255,255,0))]">
@@ -121,8 +169,32 @@ export default function RestaurantLayout({
             </div>
 
             <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/30 border border-border/40">
+                <AccessTimeIcon sx={{ fontSize: 20 }} className="text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">9am - 8pm</span>
+              </div>
+              {restaurantId && (
+                <RestaurantStatusToggle
+                  restaurantId={restaurantId}
+                  initialStatus={operatingStatus}
+                  onStatusChange={(newStatus) => {
+                    setOperatingStatus(newStatus);
+                    // Update localStorage
+                    const restaurantData = localStorage.getItem(`restaurant-${cleanSlug}`);
+                    if (restaurantData) {
+                      try {
+                        const restaurant = JSON.parse(restaurantData);
+                        restaurant.operating_status = newStatus;
+                        localStorage.setItem(`restaurant-${cleanSlug}`, JSON.stringify(restaurant));
+                      } catch (error) {
+                        console.error("Failed to update localStorage:", error);
+                      }
+                    }
+                  }}
+                />
+              )}
               <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/50 border border-border/50">
-                <User className="w-4 h-4 text-muted-foreground" />
+                <PersonIcon sx={{ fontSize: 20 }} className="text-muted-foreground" />
                 <span className="text-sm font-medium">{userEmail}</span>
               </div>
               <Button
@@ -131,25 +203,28 @@ export default function RestaurantLayout({
                 onClick={handleLogout}
                 className="gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 transition-all"
               >
-                <LogOut className="w-4 h-4" />
+                <LogoutIcon sx={{ fontSize: 20 }} />
                 Logout
               </Button>
             </div>
           </div>
 
           <Tabs value={activeTab} className="w-full">
-            <TabsList className="grid w-full max-w-md grid-cols-3 h-12 bg-muted/50">
-              {tabs.map((tab) => (
-                <Link key={tab.value} href={tab.href}>
-                  <TabsTrigger
-                    value={tab.value}
-                    className="w-full gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
-                  >
-                    <tab.icon className="w-4 h-4" />
-                    {tab.label}
-                  </TabsTrigger>
-                </Link>
-              ))}
+            <TabsList className="grid w-full max-w-2xl grid-cols-4 h-12 bg-muted/50">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <Link key={tab.value} href={tab.href}>
+                    <TabsTrigger
+                      value={tab.value}
+                      className="w-full gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+                    >
+                      <Icon sx={{ fontSize: 20 }} />
+                      {tab.label}
+                    </TabsTrigger>
+                  </Link>
+                );
+              })}
             </TabsList>
           </Tabs>
         </div>

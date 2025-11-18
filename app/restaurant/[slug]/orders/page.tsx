@@ -1,17 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Clock,
-  MapPin,
-  DollarSign,
-  Package,
-  CheckCircle2,
-  XCircle,
-} from "lucide-react";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { cn } from "@/lib/utils";
 import { API_ENDPOINTS } from "@/lib/api";
 
@@ -48,33 +46,51 @@ const statusConfig = {
   pending: {
     label: "Pending",
     color: "bg-amber-500/10 text-amber-500 border-amber-500/20",
-    icon: Clock,
+    icon: AccessTimeIcon,
   },
   confirmed: {
     label: "Confirmed",
     color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-    icon: Package,
+    icon: LocalShippingIcon,
   },
   preparing: {
     label: "Preparing",
     color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-    icon: Package,
+    icon: LocalShippingIcon,
   },
   ready: {
     label: "Ready",
     color: "bg-green-500/10 text-green-500 border-green-500/20",
-    icon: CheckCircle2,
+    icon: CheckCircleIcon,
   },
   picked_up: {
     label: "Picked Up",
     color: "bg-green-500/10 text-green-500 border-green-500/20",
-    icon: CheckCircle2,
+    icon: CheckCircleIcon,
+  },
+  in_transit: {
+    label: "In Transit",
+    color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+    icon: LocalShippingIcon,
+  },
+  delivered: {
+    label: "Delivered",
+    color: "bg-green-500/10 text-green-500 border-green-500/20",
+    icon: CheckCircleIcon,
   },
 };
 
 export default function OrdersPage() {
   const params = useParams();
   const restaurantSlug = decodeURIComponent(params.slug as string);
+  // Remove @ from slug for localStorage key
+  const cleanSlug = useMemo(
+    () =>
+      restaurantSlug.startsWith("@")
+        ? restaurantSlug.slice(1)
+        : restaurantSlug,
+    [restaurantSlug]
+  );
 
   const [filter, setFilter] = useState<string>("all");
   const [orders, setOrders] = useState<Order[]>([]);
@@ -83,29 +99,55 @@ export default function OrdersPage() {
   const [restaurantId, setRestaurantId] = useState<string>("");
 
   useEffect(() => {
+    // Get restaurant ID from localStorage first
+    const restaurantData = localStorage.getItem(`restaurant-${cleanSlug}`);
+    if (restaurantData) {
+      try {
+        const restaurant = JSON.parse(restaurantData);
+        setRestaurantId(restaurant.id);
+        return;
+      } catch (error) {
+        console.error("Failed to parse restaurant data:", error);
+      }
+    }
+
+    // Fallback: Fetch from API
     const fetchRestaurantId = async () => {
       try {
         const token = localStorage.getItem("auth-token");
-        const response = await fetch(
-          API_ENDPOINTS.restaurants.details(restaurantSlug),
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(API_ENDPOINTS.restaurants.myRestaurants, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response.ok) {
           const data = await response.json();
-          setRestaurantId(data.restaurant?.id || "");
+          const restaurant = data.restaurants?.find(
+            (r: any) => r.slug === cleanSlug,
+          );
+          if (restaurant) {
+            setRestaurantId(restaurant.id);
+            localStorage.setItem(
+              `restaurant-${cleanSlug}`,
+              JSON.stringify(restaurant),
+            );
+          } else {
+            console.error("Restaurant not found in myRestaurants");
+            setIsLoading(false);
+          }
+        } else {
+          console.error("Failed to fetch myRestaurants:", response.status);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("Failed to fetch restaurant:", error);
+        setIsLoading(false);
       }
     };
 
     fetchRestaurantId();
-  }, [restaurantSlug]);
+  }, [cleanSlug]);
 
   useEffect(() => {
     if (!restaurantId) return;
@@ -114,7 +156,7 @@ export default function OrdersPage() {
 
     // PERFORMANCE: Only poll when page is visible
     const interval = setInterval(() => {
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === "visible") {
         fetchOrders();
       }
     }, 10000);
@@ -128,21 +170,23 @@ export default function OrdersPage() {
 
     try {
       const token = localStorage.getItem("auth-token");
-      const response = await fetch(
-        API_ENDPOINTS.orders.list(restaurantId),
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(API_ENDPOINTS.orders.list(restaurantId), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (response.ok) {
         const data = await response.json();
+        console.log("Orders fetched successfully:", data.orders?.length || 0);
         setOrders(data.orders || []);
+      } else {
+        console.error("Failed to fetch orders:", response.status, response.statusText);
+        setOrders([]);
       }
     } catch (error) {
       console.error("Failed to fetch orders:", error);
+      setOrders([]);
     } finally {
       setIsLoading(false);
     }
@@ -155,23 +199,20 @@ export default function OrdersPage() {
     const previousOrders = [...orders];
     setOrders((prev) =>
       prev.map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      )
+        order.id === orderId ? { ...order, status: newStatus } : order,
+      ),
     );
 
     try {
       const token = localStorage.getItem("auth-token");
-      const response = await fetch(
-        API_ENDPOINTS.orders.updateStatus(orderId),
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: newStatus }),
-        }
-      );
+      const response = await fetch(API_ENDPOINTS.orders.updateStatus(orderId), {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
 
       if (!response.ok) {
         // Revert on error
@@ -252,7 +293,7 @@ export default function OrdersPage() {
         {filteredOrders.map((order, index) => {
           const StatusIcon =
             statusConfig[order.status as keyof typeof statusConfig]?.icon ||
-            Clock;
+            AccessTimeIcon;
           const isUpdating = updatingOrders.has(order.id);
           const customerName = order.users
             ? `${order.users.first_name} ${order.users.last_name}`
@@ -278,10 +319,10 @@ export default function OrdersPage() {
                               statusConfig[
                                 order.status as keyof typeof statusConfig
                               ]?.color ||
-                                "bg-gray-500/10 text-gray-500 border-gray-500/20"
+                                "bg-gray-500/10 text-gray-500 border-gray-500/20",
                             )}
                           >
-                            <StatusIcon className="w-3 h-3" />
+                            <StatusIcon sx={{ fontSize: 16 }} />
                             {statusConfig[
                               order.status as keyof typeof statusConfig
                             ]?.label || order.status}
@@ -289,13 +330,13 @@ export default function OrdersPage() {
                         </div>
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1.5">
-                            <Clock className="w-4 h-4" />
+                            <AccessTimeIcon sx={{ fontSize: 20 }} />
                             {getTimeAgo(order.created_at)}
                           </span>
                           <span className="flex items-center gap-1.5">
-                            <MapPin className="w-4 h-4" />
-                            {order.delivery_address.street},{" "}
-                            {order.delivery_address.city}
+                            <LocationOnIcon sx={{ fontSize: 20 }} />
+                            {order.delivery_address?.street || "N/A"},{" "}
+                            {order.delivery_address?.city || "N/A"}
                           </span>
                         </div>
                       </div>
@@ -305,8 +346,12 @@ export default function OrdersPage() {
                       <p className="text-sm font-medium">{customerName}</p>
                       <div className="space-y-1">
                         {order.order_items.map((item) => (
-                          <p key={item.id} className="text-sm text-muted-foreground">
-                            {item.menu_items?.name || 'Unknown Item'} x{item.quantity}
+                          <p
+                            key={item.id}
+                            className="text-sm text-muted-foreground"
+                          >
+                            {item.menu_items?.name || "Unknown Item"} x
+                            {item.quantity}
                             {item.special_instructions && (
                               <span className="text-xs italic">
                                 {" "}
@@ -319,9 +364,8 @@ export default function OrdersPage() {
                     </div>
 
                     <div className="flex items-center gap-2 pt-2 border-t border-border/50">
-                      <DollarSign className="w-5 h-5 text-muted-foreground" />
                       <span className="text-2xl font-bold">
-                        AED {order.total_amount.toFixed(2)}
+                        AED {Number(order.total_amount).toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -331,19 +375,23 @@ export default function OrdersPage() {
                       <>
                         <Button
                           className="flex-1 lg:w-full gap-2 shadow-sm"
-                          onClick={() => updateOrderStatus(order.id, "confirmed")}
+                          onClick={() =>
+                            updateOrderStatus(order.id, "confirmed")
+                          }
                           disabled={isUpdating}
                         >
-                          <CheckCircle2 className="w-4 h-4" />
+                          <CheckCircleIcon sx={{ fontSize: 20 }} />
                           {isUpdating ? "Updating..." : "Accept"}
                         </Button>
                         <Button
                           variant="outline"
                           className="flex-1 lg:w-full gap-2 text-destructive hover:text-destructive"
-                          onClick={() => updateOrderStatus(order.id, "cancelled")}
+                          onClick={() =>
+                            updateOrderStatus(order.id, "cancelled")
+                          }
                           disabled={isUpdating}
                         >
-                          <XCircle className="w-4 h-4" />
+                          <CancelIcon sx={{ fontSize: 20 }} />
                           Reject
                         </Button>
                       </>
@@ -354,7 +402,7 @@ export default function OrdersPage() {
                         onClick={() => updateOrderStatus(order.id, "preparing")}
                         disabled={isUpdating}
                       >
-                        <Package className="w-4 h-4" />
+                        <LocalShippingIcon sx={{ fontSize: 20 }} />
                         {isUpdating ? "Updating..." : "Start Preparing"}
                       </Button>
                     )}
@@ -364,7 +412,7 @@ export default function OrdersPage() {
                         onClick={() => updateOrderStatus(order.id, "ready")}
                         disabled={isUpdating}
                       >
-                        <CheckCircle2 className="w-4 h-4" />
+                        <CheckCircleIcon sx={{ fontSize: 20 }} />
                         {isUpdating ? "Updating..." : "Mark Ready"}
                       </Button>
                     )}
@@ -392,7 +440,7 @@ export default function OrdersPage() {
 
       {filteredOrders.length === 0 && (
         <div className="text-center py-12">
-          <Package className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+          <LocalShippingIcon sx={{ fontSize: 64 }} className="mx-auto text-muted-foreground mb-4" />
           <h3 className="text-xl font-semibold mb-2">No orders found</h3>
           <p className="text-muted-foreground">
             {filter === "all"

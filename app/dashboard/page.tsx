@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, ChevronRight, LogOut, User } from "lucide-react";
+import BusinessIcon from "@mui/icons-material/Business";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useRouter } from "next/navigation";
 import { API_ENDPOINTS } from "@/lib/api";
 
@@ -12,6 +17,7 @@ interface Restaurant {
   name: string;
   slug: string;
   description: string;
+  icon?: string;
   ordersToday?: number;
   revenue?: string;
 }
@@ -27,6 +33,11 @@ export default function DashboardPage() {
       try {
         const token = localStorage.getItem("auth-token");
         const user = localStorage.getItem("user");
+
+        if (!token) {
+          router.push("/login");
+          return;
+        }
 
         if (user) {
           try {
@@ -55,7 +66,7 @@ export default function DashboardPage() {
     };
 
     fetchRestaurants();
-  }, []);
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
@@ -90,7 +101,7 @@ export default function DashboardPage() {
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/50 border border-border/50">
-                <User className="w-4 h-4 text-muted-foreground" />
+                <PersonIcon sx={{ fontSize: 20 }} className="text-muted-foreground" />
                 <span className="text-sm font-medium">{userEmail}</span>
               </div>
               <Button
@@ -99,7 +110,7 @@ export default function DashboardPage() {
                 onClick={handleLogout}
                 className="gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 transition-all"
               >
-                <LogOut className="w-4 h-4" />
+                <LogoutIcon sx={{ fontSize: 20 }} />
                 Logout
               </Button>
             </div>
@@ -127,15 +138,19 @@ export default function DashboardPage() {
               key={restaurant.id}
               className="group hover:shadow-xl hover:border-primary/20 transition-all duration-300 cursor-pointer hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4"
               style={{ animationDelay: `${index * 100}ms` }}
-              onClick={() =>
-                (window.location.href = `/restaurant/@${restaurant.slug}`)
-              }
+              onClick={() => {
+                localStorage.setItem(
+                  `restaurant-${restaurant.slug}`,
+                  JSON.stringify(restaurant),
+                );
+                window.location.href = `/restaurant/@${restaurant.slug}`;
+              }}
             >
               <CardHeader className="space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-4xl">
-                      R
+                    <div className="w-16 h-16 min-w-16 min-h-16 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900 flex items-center justify-center text-4xl flex-shrink-0">
+                      {restaurant.icon || "🥗"}
                     </div>
                     <div className="space-y-1">
                       <CardTitle className="text-2xl">
@@ -151,7 +166,7 @@ export default function DashboardPage() {
                     variant="ghost"
                     className="group-hover:bg-accent"
                   >
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRightIcon sx={{ fontSize: 24 }} />
                   </Button>
                 </div>
               </CardHeader>
@@ -182,7 +197,7 @@ export default function DashboardPage() {
           <CardContent className="flex items-center justify-center p-12">
             <div className="text-center space-y-4">
               <div className="w-16 h-16 mx-auto rounded-full bg-muted flex items-center justify-center">
-                <Building2 className="w-8 h-8 text-muted-foreground" />
+                <BusinessIcon sx={{ fontSize: 32 }} className="text-muted-foreground" />
               </div>
               <div className="space-y-2">
                 <h3 className="text-xl font-semibold">
