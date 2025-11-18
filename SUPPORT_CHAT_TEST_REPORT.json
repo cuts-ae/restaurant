@@ -1,0 +1,810 @@
+{
+  "timestamp": "2025-11-18T21:26:30.706Z",
+  "testSteps": [
+    {
+      "step": 1,
+      "name": "Login Page Load",
+      "state": {
+        "url": "http://localhost:45002/login",
+        "title": "Restaurant Portal - Premium Restaurant Management",
+        "hasEmailInput": true,
+        "hasPasswordInput": true,
+        "hasSubmitButton": true,
+        "bodyText": "Restaurant Portal\n\nSign in to manage your restaurant operations\n\nEmail\nPassword\nSign in\nForgot your password?\nDEMO CREDENTIALS\n\nFor development and testing purposes, use these credentials:\n\nEMAIL\nowner1@cuts.ae\nPASSWORD\npassword123\n\nThese credentials are for demo purposes only and should not be used"
+      }
+    },
+    {
+      "step": 2,
+      "name": "Login Attempt",
+      "state": {
+        "url": "http://localhost:45002/login",
+        "hasAuthToken": false,
+        "hasUser": false,
+        "errorVisible": true,
+        "errorText": "Invalid credentials",
+        "stillOnLoginPage": true
+      }
+    },
+    {
+      "step": 3,
+      "name": "Support Page Analysis",
+      "state": {
+        "url": "http://localhost:45002/restaurant/burgerspot/support",
+        "title": "Restaurant Portal - Premium Restaurant Management",
+        "pageHeading": "Support Chat",
+        "pageDescription": "Get help with your restaurant portal or connect with our support team",
+        "chatInterface": {
+          "visible": false,
+          "hasChatCard": true,
+          "hasMessageArea": true,
+          "hasInputField": false,
+          "hasSendButton": true,
+          "hasFileUploadButton": true
+        },
+        "connectionStatus": {
+          "indicator": "h-2 w-2 rounded-full bg-red-500",
+          "statusText": "Disconnected",
+          "sessionStatus": "Waiting for support..."
+        },
+        "messages": {
+          "count": 10,
+          "noMessagesText": "No messages yet. Start the conversation!",
+          "hasMessages": true
+        },
+        "inputElements": [
+          {
+            "type": "file",
+            "placeholder": "",
+            "disabled": false,
+            "id": "",
+            "className": "hidden"
+          },
+          {
+            "type": "text",
+            "placeholder": "Waiting for support agent...",
+            "disabled": false,
+            "id": "",
+            "className": "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 flex-1"
+          }
+        ],
+        "buttons": [
+          {
+            "text": "Logout",
+            "type": "submit",
+            "disabled": false,
+            "className": "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] border border-input bg-background h-9 rounded-md px-3 gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 transition-all"
+          },
+          {
+            "text": "Orders",
+            "type": "button",
+            "disabled": false,
+            "className": "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-foreground w-full gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+          },
+          {
+            "text": "Menu",
+            "type": "button",
+            "disabled": false,
+            "className": "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-foreground w-full gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+          },
+          {
+            "text": "Analytics",
+            "type": "button",
+            "disabled": false,
+            "className": "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-foreground w-full gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+          },
+          {
+            "text": "Support",
+            "type": "button",
+            "disabled": false,
+            "className": "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-foreground w-full gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
+          },
+          {
+            "text": "",
+            "type": "button",
+            "disabled": false,
+            "className": "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10"
+          },
+          {
+            "text": "",
+            "type": "submit",
+            "disabled": true,
+            "className": "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm h-10 w-10"
+          }
+        ],
+        "visibleText": "← Back to Dashboard\nLoading...\n9am - 8pm\nowner1@cuts.ae\nLogout\nOrders\nMenu\nAnalytics\nSupport\nSupport Chat\n\nGet help with your restaurant portal or connect with our support team\n\nDisconnected\nWaiting for support...\n\nNo messages yet. Start the conversation!"
+      }
+    },
+    {
+      "step": 4,
+      "name": "WebSocket Analysis",
+      "state": {
+        "hasWebSocket": true,
+        "hasSocketIO": false,
+        "wsAttempts": []
+      }
+    },
+    {
+      "step": 5,
+      "name": "Final State",
+      "state": {
+        "url": "http://localhost:45002/restaurant/burgerspot/support",
+        "messageCount": 11,
+        "connectionIndicator": "h-2 w-2 rounded-full bg-red-500",
+        "anyErrors": false,
+        "visibleContent": "← Back to Dashboard\nLoading...\n9am - 8pm\nowner1@cuts.ae\nLogout\nOrders\nMenu\nAnalytics\nSupport\nSupport Chat\n\nGet help with your restaurant portal or connect with our support team\n\nDisconnected\nWaiting for support...\n\nNo messages yet. Start the conversation!"
+      }
+    }
+  ],
+  "consoleLogs": [
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2025-11-18T21:26:30.892Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "timestamp": "2025-11-18T21:26:33.354Z"
+    },
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2025-11-18T21:26:36.574Z"
+    },
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2025-11-18T21:26:40.197Z"
+    },
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2025-11-18T21:26:42.781Z"
+    },
+    {
+      "type": "error",
+      "text": "Error initializing chat: JSHandle@error",
+      "timestamp": "2025-11-18T21:26:42.838Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "timestamp": "2025-11-18T21:26:42.849Z"
+    }
+  ],
+  "networkRequests": [
+    {
+      "url": "http://localhost:45002/login",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.760Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.820Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.820Z"
+    },
+    {
+      "url": "http://localhost:45002/logo.png",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.820Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Broot-of-the-server%5D__28bc9c2a._.css",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.822Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_57d40746._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.822Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.822Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_a9cb0712.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.822Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_5150ccfd._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.822Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_client_cf1d9188._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.822Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_b0daae9a._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.822Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_%40swc_helpers_cjs_b3dc30d6._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.822Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_a0ff3932._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.823Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/turbopack-_cdba956c._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.823Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_8db7fb1f._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.823Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_favicon_ico_mjs_e98bdb63._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.823Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_c0019501._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.823Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_layout_tsx_0a548d63._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.823Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_error_tsx_059b41a8._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.823Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_error_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.823Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_02409dcd._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.824Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_not-found_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.824Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_2de4cdde._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.824Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_910216f2._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.824Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_login_page_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.824Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_994d91b1.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.824Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.960Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_285433b7._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.960Z"
+    },
+    {
+      "url": "http://localhost:45002/logo.png",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:30.960Z"
+    },
+    {
+      "url": "http://localhost:45000/api/v1/auth/login",
+      "method": "POST",
+      "timestamp": "2025-11-18T21:26:33.343Z"
+    },
+    {
+      "url": "http://localhost:45002/login",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.445Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.509Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.509Z"
+    },
+    {
+      "url": "http://localhost:45002/logo.png",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.509Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Broot-of-the-server%5D__28bc9c2a._.css",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_57d40746._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_a9cb0712.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_5150ccfd._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_client_cf1d9188._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_b0daae9a._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_%40swc_helpers_cjs_b3dc30d6._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_a0ff3932._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/turbopack-_cdba956c._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_8db7fb1f._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_favicon_ico_mjs_e98bdb63._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_c0019501._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.511Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_layout_tsx_0a548d63._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.512Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_error_tsx_059b41a8._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.512Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_error_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.512Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_02409dcd._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.512Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_not-found_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.512Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_2de4cdde._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.512Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_910216f2._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.512Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_login_page_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.512Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_994d91b1.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.512Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.600Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_285433b7._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:36.600Z"
+    },
+    {
+      "url": "http://localhost:45000/api/v1/auth/login",
+      "method": "POST",
+      "timestamp": "2025-11-18T21:26:39.525Z"
+    },
+    {
+      "url": "http://localhost:45002/dashboard",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.101Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.150Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.150Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Broot-of-the-server%5D__28bc9c2a._.css",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_57d40746._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_a9cb0712.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_5150ccfd._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_client_cf1d9188._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_b0daae9a._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_%40swc_helpers_cjs_b3dc30d6._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_a0ff3932._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/turbopack-_cdba956c._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_8db7fb1f._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_favicon_ico_mjs_e98bdb63._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_c0019501._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_layout_tsx_0a548d63._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_error_tsx_059b41a8._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_error_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_02409dcd._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.151Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_not-found_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.152Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_3d63e092._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.152Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_8ef7e3d4._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.152Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_dashboard_page_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.152Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_994d91b1.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.152Z"
+    },
+    {
+      "url": "http://localhost:45000/api/v1/restaurants/my/restaurants",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.223Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.224Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_285433b7._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.224Z"
+    },
+    {
+      "url": "http://localhost:45002/logo.png",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:40.234Z"
+    },
+    {
+      "url": "http://localhost:45002/restaurant/burgerspot/support",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.620Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/media/797e433ab948586e-s.p.dbea232f.woff2",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.717Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.718Z"
+    },
+    {
+      "url": "http://localhost:45002/logo.png",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.719Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Broot-of-the-server%5D__28bc9c2a._.css",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.719Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_57d40746._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.719Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.719Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_a9cb0712.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.719Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_compiled_5150ccfd._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.719Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_client_cf1d9188._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.721Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_b0daae9a._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.721Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_%40swc_helpers_cjs_b3dc30d6._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.721Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_a0ff3932._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.722Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/turbopack-_cdba956c._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.722Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_8db7fb1f._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.722Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_favicon_ico_mjs_e98bdb63._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.722Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_c0019501._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.722Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_layout_tsx_0a548d63._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.722Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_error_tsx_059b41a8._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.722Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_error_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.723Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_02409dcd._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.723Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_not-found_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.723Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_a5cb53a5._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.723Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_8645eac6._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.723Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_restaurant_%5Bslug%5D_layout_tsx_994d91b1._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.723Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_291e25a6._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.723Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/_c887786e._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.723Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/app_restaurant_%5Bslug%5D_support_page_tsx_ee661919._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.724Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_994d91b1.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.724Z"
+    },
+    {
+      "url": "http://localhost:45000/api/v1/chat/sessions/my",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.825Z"
+    },
+    {
+      "url": "http://localhost:45000/api/v1/restaurants/my/restaurants",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.825Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.827Z"
+    },
+    {
+      "url": "http://localhost:45002/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_285433b7._.js",
+      "method": "GET",
+      "timestamp": "2025-11-18T21:26:42.827Z"
+    },
+    {
+      "url": "http://localhost:45000/api/v1/chat/sessions",
+      "method": "POST",
+      "timestamp": "2025-11-18T21:26:42.839Z"
+    },
+    {
+      "url": "http://localhost:45002/__nextjs_original-stack-frames",
+      "method": "POST",
+      "timestamp": "2025-11-18T21:26:42.842Z"
+    }
+  ],
+  "failedRequests": [],
+  "screenshots": [
+    "step-01-login-page.png",
+    "step-02-credentials-entered.png",
+    "step-03-after-login-attempt.png",
+    "step-04-alternate-credentials.png",
+    "step-05-alternate-login-result.png",
+    "step-06-support-page.png",
+    "step-09-final-state.png"
+  ],
+  "findings": {
+    "chatInterfaceVisible": false,
+    "hasInputField": false,
+    "hasSendButton": true,
+    "connectionStatus": "Disconnected",
+    "sessionStatus": "Waiting for support...",
+    "messagesPresent": false
+  }
+}

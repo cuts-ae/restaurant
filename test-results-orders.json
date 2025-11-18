@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-11-18T16:04:40.208Z",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navigate to login page",
+      "status": "success"
+    },
+    {
+      "step": 2,
+      "action": "Fill login credentials",
+      "status": "success"
+    },
+    {
+      "step": 3,
+      "action": "Click login button",
+      "status": "success"
+    },
+    {
+      "step": 4,
+      "action": "Find restaurant card",
+      "status": "failed"
+    }
+  ],
+  "errors": [],
+  "consoleMessages": [
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2025-11-18T16:04:40.430Z"
+    },
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2025-11-18T16:04:51.421Z"
+    }
+  ],
+  "screenshots": [
+    "/Users/sour/Projects/cuts.ae/restaurant/screenshots/step1-login-page.png",
+    "/Users/sour/Projects/cuts.ae/restaurant/screenshots/step2-credentials-filled.png",
+    "/Users/sour/Projects/cuts.ae/restaurant/screenshots/step3-after-login.png",
+    "/Users/sour/Projects/cuts.ae/restaurant/screenshots/step4-dashboard.png",
+    "/Users/sour/Projects/cuts.ae/restaurant/screenshots/final-state.png"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "timestamp": "2025-11-18T17:56:46.698Z",
+  "portals": {
+    "restaurant": {
+      "name": "Restaurant Portal",
+      "url": "http://localhost:45002",
+      "tests": [
+        {
+          "name": "Login",
+          "passed": false,
+          "errors": [
+            "Internal Server Error detected on page",
+            "Login error: Waiting for selector `input[type=\"email\"], input[name=\"email\"]` failed"
+          ],
+          "screenshot": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/Restaurant-Portal-login.png"
+        }
+      ],
+      "features": [],
+      "passed": 0,
+      "failed": 1,
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ]
+    },
+    "admin": {
+      "name": "Admin Portal",
+      "url": "http://localhost:45003",
+      "tests": [
+        {
+          "name": "Login",
+          "passed": false,
+          "errors": [
+            "Failed to navigate to login page"
+          ],
+          "screenshot": null
+        }
+      ],
+      "features": [],
+      "passed": 0,
+      "failed": 1
+    },
+    "support": {
+      "name": "Support Portal",
+      "url": "http://localhost:45004",
+      "tests": [
+        {
+          "name": "Login",
+          "passed": false,
+          "errors": [
+            "Internal Server Error detected on page",
+            "Login failed - redirected to: http://localhost:45004/"
+          ],
+          "screenshot": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/Support-Portal-login.png"
+        }
+      ],
+      "features": [],
+      "passed": 0,
+      "failed": 1,
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    }
+  },
+  "summary": {
+    "totalTests": 3,
+    "passed": 0,
+    "failed": 3,
+    "errors": []
+  }
+}

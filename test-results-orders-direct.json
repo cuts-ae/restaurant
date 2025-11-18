@@ -1,0 +1,86 @@
+{
+  "timestamp": "2025-11-18T16:08:43.586Z",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navigate to login page",
+      "status": "success"
+    },
+    {
+      "step": 2,
+      "action": "Fill login credentials",
+      "status": "success"
+    },
+    {
+      "step": 3,
+      "action": "Click login button",
+      "status": "success"
+    },
+    {
+      "step": 4,
+      "action": "Navigate directly to orders page",
+      "status": "success"
+    },
+    {
+      "step": 5,
+      "action": "Check page content",
+      "status": "success",
+      "details": {
+        "hasLoadingText": false,
+        "hasSomethingWentWrong": false,
+        "hasRestaurantName": true,
+        "hasOrdersText": true,
+        "hasNoOrdersText": false,
+        "url": "http://localhost:45002/restaurant/@fitfresh-abudhabi/orders"
+      }
+    },
+    {
+      "step": 6,
+      "action": "Check for visible elements",
+      "status": "success",
+      "details": {
+        "orderDivs": 31,
+        "tableRows": 0
+      }
+    }
+  ],
+  "errors": [],
+  "consoleMessages": [
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2025-11-18T16:08:43.815Z"
+    },
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2025-11-18T16:08:54.426Z"
+    },
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2025-11-18T16:08:55.337Z"
+    },
+    {
+      "type": "log",
+      "text": "Orders fetched successfully: 7",
+      "timestamp": "2025-11-18T16:08:55.385Z"
+    }
+  ],
+  "screenshots": [
+    "/Users/sour/Projects/cuts.ae/restaurant/screenshots/orders-page-direct.png",
+    "/Users/sour/Projects/cuts.ae/restaurant/screenshots/orders-final-direct.png"
+  ],
+  "pageCheck": {
+    "hasLoadingText": false,
+    "hasSomethingWentWrong": false,
+    "hasRestaurantName": true,
+    "hasOrdersText": true,
+    "hasNoOrdersText": false,
+    "url": "http://localhost:45002/restaurant/@fitfresh-abudhabi/orders"
+  },
+  "elementsCheck": {
+    "orderDivs": 31,
+    "tableRows": 0
+  }
+}

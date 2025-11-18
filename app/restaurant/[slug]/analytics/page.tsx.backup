@@ -1,0 +1,420 @@
+"use client";
+
+import { useState, useEffect, useMemo } from "react";
+import { useParams } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TrendingUp, Clock } from "lucide-react";
+import { API_ENDPOINTS } from "@/lib/api";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
+interface TopItem {
+  menu_item_id: string;
+  name: string;
+  count: number;
+}
+
+interface RevenueByDay {
+  date: string;
+  orders: number;
+  revenue: number;
+}
+
+interface OrdersByStatus {
+  status: string;
+  count: number;
+}
+
+interface PeakHour {
+  hour: number;
+  orders: number;
+}
+
+interface Analytics {
+  today: {
+    orders: number;
+    revenue: number;
+  };
+  topItems: TopItem[];
+  revenueByDay: RevenueByDay[];
+  ordersByStatus: OrdersByStatus[];
+  peakHours: PeakHour[];
+}
+
+export default function AnalyticsPage() {
+  const params = useParams();
+  const restaurantSlug = decodeURIComponent(params.slug as string);
+  // Remove @ from slug for localStorage key
+  const cleanSlug = useMemo(
+    () =>
+      restaurantSlug.startsWith("@")
+        ? restaurantSlug.slice(1)
+        : restaurantSlug,
+    [restaurantSlug]
+  );
+
+  const [analytics, setAnalytics] = useState<Analytics | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [restaurantId, setRestaurantId] = useState<string>("");
+
+  useEffect(() => {
+    // Get restaurant ID from localStorage first
+    const restaurantData = localStorage.getItem(`restaurant-${cleanSlug}`);
+    if (restaurantData) {
+      try {
+        const restaurant = JSON.parse(restaurantData);
+        setRestaurantId(restaurant.id);
+        return;
+      } catch (error) {
+        console.error("Failed to parse restaurant data:", error);
+      }
+    }
+
+    // Fallback: Fetch from API
+    const fetchRestaurantId = async () => {
+      try {
+        const token = localStorage.getItem("auth-token");
+        const response = await fetch(API_ENDPOINTS.restaurants.myRestaurants, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const restaurant = data.restaurants?.find(
+            (r: any) => r.slug === cleanSlug,
+          );
+          if (restaurant) {
+            setRestaurantId(restaurant.id);
+            localStorage.setItem(
+              `restaurant-${cleanSlug}`,
+              JSON.stringify(restaurant),
+            );
+          } else {
+            console.error("Restaurant not found in myRestaurants");
+            setIsLoading(false);
+          }
+        } else {
+          console.error("Failed to fetch myRestaurants:", response.status);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Failed to fetch restaurant:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchRestaurantId();
+  }, [cleanSlug]);
+
+  useEffect(() => {
+    if (!restaurantId) return;
+    fetchAnalytics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [restaurantId]);
+
+  const fetchAnalytics = async () => {
+    if (!restaurantId) return;
+
+    try {
+      const token = localStorage.getItem("auth-token");
+      const response = await fetch(
+        API_ENDPOINTS.restaurants.analytics(restaurantId),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Analytics fetched successfully:", data.analytics);
+        setAnalytics(data.analytics);
+      } else {
+        console.error("Failed to fetch analytics:", response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error("Failed to fetch analytics:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <p className="text-lg text-muted-foreground">Loading analytics...</p>
+      </div>
+    );
+  }
+
+  const statsCards = [
+    {
+      title: "Revenue Today",
+      value: `AED ${analytics?.today.revenue.toFixed(2) || "0.00"}`,
+      gradient: "from-gray-900 to-gray-800",
+    },
+    {
+      title: "Orders Today",
+      value: analytics?.today.orders.toString() || "0",
+      gradient: "from-gray-800 to-gray-700",
+    },
+  ];
+
+  // Format revenue data for charts
+  const revenueChartData = analytics?.revenueByDay?.map((item) => ({
+    date: new Date(item.date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    }),
+    revenue: item.revenue,
+    orders: item.orders,
+  })) || [];
+
+  // Format peak hours data
+  const peakHoursData = analytics?.peakHours?.map((item) => ({
+    hour: `${item.hour}:00`,
+    orders: item.orders,
+  })) || [];
+
+  // Status colors for pie chart - grayscale theme
+  const STATUS_COLORS = {
+    pending: "#9ca3af",
+    confirmed: "#6b7280",
+    preparing: "#4b5563",
+    ready: "#374151",
+    picked_up: "#1f2937",
+    in_transit: "#111827",
+    delivered: "#030712",
+  };
+
+  const statusChartData = analytics?.ordersByStatus?.map((item) => ({
+    name: item.status.charAt(0).toUpperCase() + item.status.slice(1).replace("_", " "),
+    value: item.count,
+    color: STATUS_COLORS[item.status as keyof typeof STATUS_COLORS] || "#6b7280",
+  })) || [];
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="space-y-1">
+        <h2 className="text-3xl font-bold tracking-tight">Analytics</h2>
+        <p className="text-muted-foreground">
+          Track your restaurant performance and insights
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {statsCards.map((stat, index) => (
+          <Card
+            key={stat.title}
+            className={`bg-gradient-to-br ${stat.gradient} border-gray-800 hover:shadow-xl transition-all duration-300 animate-in fade-in slide-in-from-bottom-4`}
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
+            <CardContent className="p-6">
+              <div className="space-y-2">
+                <p className="text-sm text-gray-400 font-medium">{stat.title}</p>
+                <p className="text-3xl font-bold text-white tracking-tight">
+                  {stat.value}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Card className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="w-5 h-5" />
+            Top Selling Items (Last 7 Days)
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {analytics?.topItems && analytics.topItems.length > 0 ? (
+            analytics.topItems.map((item, index) => (
+              <div
+                key={item.menu_item_id}
+                className="flex items-center justify-between p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-all duration-200 animate-in fade-in slide-in-from-right-4"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center font-bold text-lg">
+                    #{index + 1}
+                  </div>
+                  <div>
+                    <p className="font-medium">{item.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {item.count} orders
+                    </p>
+                  </div>
+                </div>
+                <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-primary to-primary/50 transition-all duration-500"
+                    style={{
+                      width: `${Math.min((item.count / (analytics.topItems[0]?.count || 1)) * 100, 100)}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">
+                No order data available for the last 7 days
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Revenue Trend Chart */}
+      <Card className="animate-in fade-in duration-700">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="w-5 h-5" />
+            Revenue & Orders Trend (Last 7 Days)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {revenueChartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={revenueChartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="date" stroke="#6b7280" />
+                <YAxis yAxisId="left" stroke="#6b7280" />
+                <YAxis yAxisId="right" orientation="right" stroke="#6b7280" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Legend />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  name="Revenue (AED)"
+                  dot={{ fill: "#10b981" }}
+                />
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="orders"
+                  stroke="#3b82f6"
+                  strokeWidth={2}
+                  name="Orders"
+                  dot={{ fill: "#3b82f6" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="text-center py-12 text-muted-foreground">
+              No revenue data available
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Peak Hours & Order Status Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Peak Hours Chart */}
+        <Card className="animate-in fade-in duration-800">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="w-5 h-5" />
+              Peak Hours
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {peakHoursData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={peakHoursData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis dataKey="hour" stroke="#6b7280" />
+                  <YAxis stroke="#6b7280" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "8px",
+                    }}
+                  />
+                  <Bar dataKey="orders" fill="#8b5cf6" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                No peak hours data available
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Order Status Distribution */}
+        <Card className="animate-in fade-in duration-900">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Package className="w-5 h-5" />
+              Order Status Distribution
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {statusChartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={statusChartData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) =>
+                      `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`
+                    }
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {statusChartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "8px",
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                No status data available
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

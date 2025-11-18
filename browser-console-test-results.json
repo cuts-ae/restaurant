@@ -1,0 +1,34 @@
+{
+  "dashboard": {
+    "errors": [
+      {
+        "type": "navigation_error",
+        "message": "Navigation timeout of 30000 ms exceeded",
+        "stack": "TimeoutError: Navigation timeout of 30000 ms exceeded\n    at new Deferred (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/util/Deferred.js:60:34)\n    at Deferred.create (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/util/Deferred.js:21:16)\n    at new LifecycleWatcher (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/LifecycleWatcher.js:73:60)\n    at CdpFrame.goto (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/Frame.js:149:29)\n    at CdpFrame.<anonymous> (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/util/decorators.js:109:27)\n    at CdpPage.goto (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/api/Page.js:572:43)\n    at testPage (/Users/sour/Projects/cuts.ae/restaurant/test-browser-console.js:66:16)\n    at async main (/Users/sour/Projects/cuts.ae/restaurant/test-browser-console.js:113:23)"
+      },
+      {
+        "type": "requestfailed",
+        "url": "http://localhost:45003/dashboard",
+        "failure": "net::ERR_ABORTED"
+      }
+    ],
+    "warnings": [],
+    "logs": []
+  },
+  "analytics": {
+    "errors": [
+      {
+        "type": "navigation_error",
+        "message": "Navigation timeout of 30000 ms exceeded",
+        "stack": "TimeoutError: Navigation timeout of 30000 ms exceeded\n    at new Deferred (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/util/Deferred.js:60:34)\n    at Deferred.create (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/util/Deferred.js:21:16)\n    at new LifecycleWatcher (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/LifecycleWatcher.js:73:60)\n    at CdpFrame.goto (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/Frame.js:149:29)\n    at CdpFrame.<anonymous> (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/util/decorators.js:109:27)\n    at CdpPage.goto (/Users/sour/Projects/cuts.ae/restaurant/node_modules/puppeteer-core/lib/cjs/puppeteer/api/Page.js:572:43)\n    at testPage (/Users/sour/Projects/cuts.ae/restaurant/test-browser-console.js:66:16)\n    at async main (/Users/sour/Projects/cuts.ae/restaurant/test-browser-console.js:117:23)"
+      },
+      {
+        "type": "requestfailed",
+        "url": "http://localhost:45002/restaurant/@fitfresh-abudhabi/analytics",
+        "failure": "net::ERR_ABORTED"
+      }
+    ],
+    "warnings": [],
+    "logs": []
+  }
+}

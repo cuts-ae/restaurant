@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-11-18T16:00:02.464Z",
+  "tests": [
+    {
+      "name": "Restaurant name loads",
+      "passed": true,
+      "details": {
+        "hasLoading": false,
+        "hasRestaurantName": true
+      }
+    },
+    {
+      "name": "Orders displayed",
+      "passed": true,
+      "details": {
+        "hasNoOrders": false,
+        "orderCount": 1
+      }
+    }
+  ],
+  "consoleErrors": [
+    {
+      "text": "%o\n\n%s JSHandle@error The above error occurred in the <OrdersPage> component. It was handled by the <ErrorBoundaryHandler> error boundary.",
+      "timestamp": "2025-11-18T16:00:09.766Z"
+    },
+    {
+      "text": "JSHandle@error",
+      "timestamp": "2025-11-18T16:00:09.769Z"
+    },
+    {
+      "text": "JSHandle@error",
+      "timestamp": "2025-11-18T16:00:09.769Z"
+    }
+  ],
+  "networkErrors": []
+}

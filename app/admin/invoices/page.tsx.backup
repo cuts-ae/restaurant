@@ -1,0 +1,583 @@
+"use client";
+
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Search,
+  Download,
+  FileText,
+  Calendar,
+  CheckCircle,
+  Clock,
+  XCircle,
+  Wand2,
+} from "lucide-react";
+import { generateInvoicePDF, generateMultipleInvoicesPDF } from "./actions";
+import Link from "next/link";
+
+interface Invoice {
+  id: string;
+  invoiceNumber: string;
+  orderNumber: string;
+  customer: {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+  };
+  restaurant: {
+    name: string;
+    address: string;
+    phone: string;
+    email: string;
+  };
+  items: Array<{
+    name: string;
+    quantity: number;
+    price: number;
+    total: number;
+  }>;
+  subtotal: number;
+  tax: number;
+  total: number;
+  status: "paid" | "pending" | "overdue" | "cancelled";
+  issueDate: string;
+  dueDate: string;
+  paidDate?: string;
+  paymentMethod?: string;
+}
+
+export default function AdminInvoicesPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+
+  const invoices: Invoice[] = [
+    {
+      id: "1",
+      invoiceNumber: "INV-2024-001234",
+      orderNumber: "ORD-2024-1234",
+      customer: {
+        name: "Ahmed Al Maktoum",
+        email: "ahmed.almaktoum@email.ae",
+        phone: "+971 50 123 4567",
+        address: "DIFC, Dubai, UAE",
+      },
+      restaurant: {
+        name: "The Butcher Shop",
+        address: "Sheikh Zayed Road, Trade Centre, Dubai",
+        phone: "+971 4 123 4567",
+        email: "contact@butchershop.ae",
+      },
+      items: [
+        { name: "Wagyu Ribeye Steak", quantity: 2, price: 180, total: 360 },
+        { name: "Lamb Chops", quantity: 1, price: 90, total: 90 },
+      ],
+      subtotal: 450,
+      tax: 22.5,
+      total: 472.5,
+      status: "paid",
+      issueDate: "2024-11-17",
+      dueDate: "2024-11-24",
+      paidDate: "2024-11-17",
+      paymentMethod: "Credit Card",
+    },
+    {
+      id: "2",
+      invoiceNumber: "INV-2024-001235",
+      orderNumber: "ORD-2024-1235",
+      customer: {
+        name: "Fatima Hassan",
+        email: "fatima.hassan@email.ae",
+        phone: "+971 55 987 6543",
+        address: "Dubai Marina, Dubai, UAE",
+      },
+      restaurant: {
+        name: "Prime Cuts",
+        address: "Marina Walk, Dubai Marina, Dubai",
+        phone: "+971 4 987 6543",
+        email: "info@primecuts.ae",
+      },
+      items: [
+        { name: "Beef Tenderloin", quantity: 1, price: 220, total: 220 },
+        { name: "Grilled Vegetables", quantity: 2, price: 50, total: 100 },
+      ],
+      subtotal: 320,
+      tax: 16,
+      total: 336,
+      status: "pending",
+      issueDate: "2024-11-17",
+      dueDate: "2024-11-24",
+      paymentMethod: "Cash on Delivery",
+    },
+    {
+      id: "3",
+      invoiceNumber: "INV-2024-001236",
+      orderNumber: "ORD-2024-1236",
+      customer: {
+        name: "Mohammed Khan",
+        email: "mohammed.khan@email.ae",
+        phone: "+971 52 456 7890",
+        address: "Jumeirah, Dubai, UAE",
+      },
+      restaurant: {
+        name: "Grill House",
+        address: "Al Wasl Road, Jumeirah, Dubai",
+        phone: "+971 4 456 7890",
+        email: "hello@grillhouse.ae",
+      },
+      items: [
+        { name: "Mixed Grill Platter", quantity: 3, price: 150, total: 450 },
+        { name: "Caesar Salad", quantity: 2, price: 40, total: 80 },
+      ],
+      subtotal: 530,
+      tax: 26.5,
+      total: 556.5,
+      status: "paid",
+      issueDate: "2024-11-17",
+      dueDate: "2024-11-24",
+      paidDate: "2024-11-17",
+      paymentMethod: "Credit Card",
+    },
+    {
+      id: "4",
+      invoiceNumber: "INV-2024-001237",
+      orderNumber: "ORD-2024-1237",
+      customer: {
+        name: "Aisha Patel",
+        email: "aisha.patel@email.ae",
+        phone: "+971 56 234 5678",
+        address: "Business Bay, Dubai, UAE",
+      },
+      restaurant: {
+        name: "The Butcher Shop",
+        address: "Sheikh Zayed Road, Trade Centre, Dubai",
+        phone: "+971 4 123 4567",
+        email: "contact@butchershop.ae",
+      },
+      items: [
+        { name: "Chicken Breast", quantity: 4, price: 60, total: 240 },
+        { name: "Soup of the Day", quantity: 2, price: 15, total: 30 },
+      ],
+      subtotal: 270,
+      tax: 13.5,
+      total: 283.5,
+      status: "pending",
+      issueDate: "2024-11-17",
+      dueDate: "2024-11-24",
+      paymentMethod: "Apple Pay",
+    },
+    {
+      id: "5",
+      invoiceNumber: "INV-2024-001238",
+      orderNumber: "ORD-2024-1238",
+      customer: {
+        name: "Omar Abdullah",
+        email: "omar.abdullah@email.ae",
+        phone: "+971 50 876 5432",
+        address: "Downtown Dubai, Dubai, UAE",
+      },
+      restaurant: {
+        name: "Prime Cuts",
+        address: "Marina Walk, Dubai Marina, Dubai",
+        phone: "+971 4 987 6543",
+        email: "info@primecuts.ae",
+      },
+      items: [
+        { name: "T-Bone Steak", quantity: 2, price: 160, total: 320 },
+        { name: "Mashed Potatoes", quantity: 2, price: 50, total: 100 },
+      ],
+      subtotal: 420,
+      tax: 21,
+      total: 441,
+      status: "paid",
+      issueDate: "2024-11-17",
+      dueDate: "2024-11-24",
+      paidDate: "2024-11-17",
+      paymentMethod: "Credit Card",
+    },
+    {
+      id: "6",
+      invoiceNumber: "INV-2024-001239",
+      orderNumber: "ORD-2024-1239",
+      customer: {
+        name: "Mariam Al Zaabi",
+        email: "mariam.alzaabi@email.ae",
+        phone: "+971 55 345 6789",
+        address: "Palm Jumeirah, Dubai, UAE",
+      },
+      restaurant: {
+        name: "Grill House",
+        address: "Al Wasl Road, Jumeirah, Dubai",
+        phone: "+971 4 456 7890",
+        email: "hello@grillhouse.ae",
+      },
+      items: [
+        { name: "Lamb Biryani", quantity: 2, price: 120, total: 240 },
+        { name: "Garlic Naan", quantity: 4, price: 20, total: 80 },
+      ],
+      subtotal: 320,
+      tax: 16,
+      total: 336,
+      status: "overdue",
+      issueDate: "2024-11-10",
+      dueDate: "2024-11-17",
+      paymentMethod: "Cash on Delivery",
+    },
+  ];
+
+  const filteredInvoices = invoices.filter((invoice) => {
+    const matchesSearch =
+      invoice.invoiceNumber
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      invoice.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      invoice.customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      invoice.restaurant.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "all" || invoice.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "paid":
+        return "bg-green-100 text-green-700 border-green-200";
+      case "pending":
+        return "bg-yellow-100 text-yellow-700 border-yellow-200";
+      case "overdue":
+        return "bg-red-100 text-red-700 border-red-200";
+      case "cancelled":
+        return "bg-gray-100 text-gray-700 border-gray-200";
+      default:
+        return "bg-gray-100 text-gray-700 border-gray-200";
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "paid":
+        return <CheckCircle className="h-4 w-4" />;
+      case "pending":
+        return <Clock className="h-4 w-4" />;
+      case "overdue":
+        return <XCircle className="h-4 w-4" />;
+      case "cancelled":
+        return <XCircle className="h-4 w-4" />;
+      default:
+        return <FileText className="h-4 w-4" />;
+    }
+  };
+
+  const statusCounts = {
+    all: invoices.length,
+    paid: invoices.filter((i) => i.status === "paid").length,
+    pending: invoices.filter((i) => i.status === "pending").length,
+    overdue: invoices.filter((i) => i.status === "overdue").length,
+    cancelled: invoices.filter((i) => i.status === "cancelled").length,
+  };
+
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [downloadingAll, setDownloadingAll] = useState(false);
+
+  const downloadPDF = async (invoice: Invoice) => {
+    try {
+      setDownloadingId(invoice.id);
+      const result = await generateInvoicePDF(invoice);
+
+      if (result.success && result.data && result.filename) {
+        const blob = new Blob([Buffer.from(result.data, "base64")], {
+          type: "application/pdf",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = result.filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } else {
+        alert(result.error || "Failed to generate invoice PDF");
+      }
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      alert("Failed to download invoice PDF");
+    } finally {
+      setDownloadingId(null);
+    }
+  };
+
+  const downloadAllPDFs = async () => {
+    try {
+      setDownloadingAll(true);
+      const result = await generateMultipleInvoicesPDF(filteredInvoices);
+
+      if (result.success && result.data) {
+        for (const { filename, data } of result.data) {
+          const blob = new Blob([Buffer.from(data, "base64")], {
+            type: "application/pdf",
+          });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+      } else {
+        alert(result.error || "Failed to generate invoices");
+      }
+    } catch (error) {
+      console.error("Error downloading all PDFs:", error);
+      alert("Failed to download invoices");
+    } finally {
+      setDownloadingAll(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Invoices</h1>
+          <p className="text-muted-foreground mt-2">
+            Manage and download invoices
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Link href="/admin/invoices/generate">
+            <Button variant="outline" className="gap-2">
+              <Wand2 className="h-4 w-4" />
+              Generate Custom Invoice
+            </Button>
+          </Link>
+          <Button
+            className="gap-2"
+            onClick={downloadAllPDFs}
+            disabled={downloadingAll}
+          >
+            <Download className="h-4 w-4" />
+            {downloadingAll ? "Downloading..." : "Download All"}
+          </Button>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Invoices
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{invoices.length}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Paid
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">
+              {statusCounts.paid}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Pending
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-yellow-600">
+              {statusCounts.pending}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Overdue
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">
+              {statusCounts.overdue}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters */}
+      <div className="flex gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by invoice number, order number, customer, or restaurant..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <div className="flex gap-2">
+          {(["all", "paid", "pending", "overdue", "cancelled"] as const).map(
+            (status) => (
+              <Button
+                key={status}
+                variant={statusFilter === status ? "default" : "outline"}
+                size="sm"
+                onClick={() => setStatusFilter(status)}
+                className="capitalize"
+              >
+                {capitalizeStatus(status)} ({statusCounts[status]})
+              </Button>
+            )
+          )}
+        </div>
+      </div>
+
+      {/* Invoices List */}
+      <div className="space-y-4">
+        {filteredInvoices.map((invoice) => (
+          <Card key={invoice.id} className="hover:shadow-md transition-shadow">
+            <CardHeader>
+              <div className="flex items-start justify-between">
+                <div className="space-y-2 flex-1">
+                  <div className="flex items-center gap-3">
+                    <CardTitle className="text-lg">
+                      {invoice.invoiceNumber}
+                    </CardTitle>
+                    <Badge
+                      variant="outline"
+                      className={getStatusColor(invoice.status)}
+                    >
+                      <div className="flex items-center gap-1">
+                        {getStatusIcon(invoice.status)}
+                        <span>{capitalizeStatus(invoice.status)}</span>
+                      </div>
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <FileText className="h-4 w-4" />
+                      {invoice.orderNumber}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-4 w-4" />
+                      Issued: {new Date(invoice.issueDate).toLocaleDateString()}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-4 w-4" />
+                      Due: {new Date(invoice.dueDate).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold">
+                    <span>AED {invoice.total.toFixed(2)}</span>
+                  </div>
+                  {invoice.paymentMethod && (
+                    <p className="text-sm text-muted-foreground">
+                      {invoice.paymentMethod}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-6">
+                <div>
+                  <h4 className="text-sm font-semibold mb-2 text-muted-foreground">
+                    Customer
+                  </h4>
+                  <div className="space-y-1 text-sm">
+                    <p className="font-medium">{invoice.customer.name}</p>
+                    <p className="text-muted-foreground">
+                      {invoice.customer.email}
+                    </p>
+                    <p className="text-muted-foreground">
+                      {invoice.customer.phone}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold mb-2 text-muted-foreground">
+                    Restaurant
+                  </h4>
+                  <div className="space-y-1 text-sm">
+                    <p className="font-medium">{invoice.restaurant.name}</p>
+                    <p className="text-muted-foreground">
+                      {invoice.restaurant.phone}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold mb-2 text-muted-foreground">
+                    Items
+                  </h4>
+                  <div className="space-y-1 text-sm">
+                    {invoice.items.map((item, idx) => (
+                      <div key={idx} className="flex justify-between">
+                        <span>
+                          {item.quantity}x {item.name}
+                        </span>
+                        <span className="text-muted-foreground">
+                          AED {item.total}
+                        </span>
+                      </div>
+                    ))}
+                    <div className="pt-2 border-t flex justify-between font-semibold">
+                      <span>Total (incl. tax)</span>
+                      <span>AED {invoice.total.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-4 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={() => downloadPDF(invoice)}
+                  disabled={downloadingId === invoice.id}
+                >
+                  <Download className="h-4 w-4" />
+                  {downloadingId === invoice.id
+                    ? "Generating..."
+                    : "Download PDF"}
+                </Button>
+                <Button variant="outline">View Details</Button>
+                {invoice.status === "pending" && (
+                  <Button variant="default">Mark as Paid</Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {filteredInvoices.length === 0 && (
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">
+              No invoices found matching your criteria
+            </p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}

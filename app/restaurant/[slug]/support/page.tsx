@@ -38,6 +38,10 @@ export default function SupportPage() {
   const params = useParams();
   const slug = params.slug as string;
 
+  // Restaurant state
+  const [restaurantId, setRestaurantId] = useState<string | null>(null);
+  const [isLoadingRestaurant, setIsLoadingRestaurant] = useState(true);
+
   // Sessions state
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
@@ -62,11 +66,54 @@ export default function SupportPage() {
   const socketRef = useRef<Socket | null>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Fetch all sessions on mount
+  // Fetch restaurant UUID from slug on mount
   useEffect(() => {
-    fetchSessions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchRestaurant = async () => {
+      setIsLoadingRestaurant(true);
+      try {
+        const token = localStorage.getItem("auth-token");
+        if (!token) {
+          throw new Error("No authentication token found");
+        }
+
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
+        const response = await fetch(`${apiUrl}/api/v1/restaurants/${slug}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch restaurant: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const restaurant = data.restaurant || data;
+
+        if (!restaurant || !restaurant.id) {
+          throw new Error("Invalid restaurant data received");
+        }
+
+        console.log("Loaded restaurant:", restaurant.id, "for slug:", slug);
+        setRestaurantId(restaurant.id);
+      } catch (error) {
+        console.error("Error fetching restaurant:", error);
+        setSessionsError(error instanceof Error ? error.message : "Failed to load restaurant");
+      } finally {
+        setIsLoadingRestaurant(false);
+      }
+    };
+
+    fetchRestaurant();
   }, [slug]);
+
+  // Fetch all sessions when restaurant ID is available
+  useEffect(() => {
+    if (restaurantId) {
+      fetchSessions();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [restaurantId]);
 
   // Connect to socket when a session is selected
   useEffect(() => {
@@ -83,6 +130,11 @@ export default function SupportPage() {
   }, [selectedSessionId]);
 
   const fetchSessions = async () => {
+    if (!restaurantId) {
+      console.log("Skipping fetchSessions - restaurantId not yet loaded");
+      return;
+    }
+
     setIsLoadingSessions(true);
     setSessionsError(null);
 
@@ -117,9 +169,9 @@ export default function SupportPage() {
       }
 
       const restaurantSessions = sessionsArray.filter(
-        (s: ChatSession) => s.restaurant_id === slug
+        (s: ChatSession) => s.restaurant_id === restaurantId
       );
-      console.log(`Filtered ${restaurantSessions.length} sessions for restaurant ${slug}`);
+      console.log(`Filtered ${restaurantSessions.length} sessions for restaurant ${restaurantId}`);
       setSessions(restaurantSessions);
     } catch (error) {
       console.error("Error fetching sessions:", error);
@@ -131,12 +183,16 @@ export default function SupportPage() {
   };
 
   const createNewSession = async (subject: string, initialMessage: string) => {
+    if (!restaurantId) {
+      throw new Error("Restaurant ID not loaded");
+    }
+
     setIsCreatingSession(true);
     const token = localStorage.getItem("auth-token");
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
 
     try {
-      console.log("Creating new chat session:", { subject, restaurant_id: slug });
+      console.log("Creating new chat session:", { subject, restaurant_id: restaurantId });
 
       const response = await fetch(`${apiUrl}/api/v1/chat/sessions`, {
         method: "POST",
@@ -148,7 +204,7 @@ export default function SupportPage() {
           subject,
           category: "restaurant_support",
           priority: "medium",
-          restaurant_id: slug,
+          restaurant_id: restaurantId,
           initial_message: initialMessage,
         }),
       });
@@ -376,7 +432,7 @@ export default function SupportPage() {
             isOpen={isNewChatOpen}
             onOpenChange={setIsNewChatOpen}
             trigger={
-              <Button className="gap-2" disabled={isCreatingSession}>
+              <Button className="gap-2" disabled={isCreatingSession || isLoadingRestaurant || !restaurantId}>
                 {isCreatingSession ? (
                   <>
                     <CircularProgress size={16} className="text-current" />

@@ -1,0 +1,46 @@
+{
+  "testName": "Chat End-to-End Test",
+  "timestamp": "2025-11-18T21:39:02.045Z",
+  "tests": [
+    {
+      "name": "Navigate to restaurant login page",
+      "passed": true,
+      "details": "Login page loaded",
+      "screenshot": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/chat-e2e/01-restaurant-login-page.png",
+      "timestamp": "2025-11-18T21:39:07.667Z"
+    },
+    {
+      "name": "Fill restaurant credentials",
+      "passed": true,
+      "details": "Email and password entered",
+      "screenshot": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/chat-e2e/02-restaurant-credentials-filled.png",
+      "timestamp": "2025-11-18T21:39:15.898Z"
+    },
+    {
+      "name": "Login to restaurant portal",
+      "passed": true,
+      "details": "Current URL: http://localhost:45002/dashboard",
+      "screenshot": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/chat-e2e/03-restaurant-dashboard.png",
+      "timestamp": "2025-11-18T21:39:18.547Z"
+    },
+    {
+      "name": "Navigate to restaurant portal",
+      "passed": false,
+      "details": "No restaurants found",
+      "screenshot": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/chat-e2e/04-no-restaurants.png",
+      "timestamp": "2025-11-18T21:39:23.132Z"
+    },
+    {
+      "name": "Test Execution",
+      "passed": false,
+      "details": "Fatal error: Failed to navigate to restaurant",
+      "screenshot": null,
+      "timestamp": "2025-11-18T21:39:23.133Z"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "passed": 3,
+    "failed": 2
+  }
+}
