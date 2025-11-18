@@ -5,6 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { Package, Clock, User, LogOut } from "lucide-react";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import BarChartIcon from "@mui/icons-material/BarChart";
