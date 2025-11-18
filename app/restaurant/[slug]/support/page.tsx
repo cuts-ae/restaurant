@@ -100,13 +100,26 @@ export default function SupportPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch sessions");
+        const errorData = await response.json().catch(() => ({}));
+        console.error("API Error Response:", errorData);
+        throw new Error(errorData.message || `Failed to fetch sessions: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
-      const restaurantSessions = data.filter(
+      console.log("Fetched sessions response:", data);
+
+      // Handle different response formats - API might return { data: [...] } or just [...]
+      const sessionsArray = Array.isArray(data) ? data : (data.data || data.sessions || []);
+
+      if (!Array.isArray(sessionsArray)) {
+        console.error("Unexpected API response format:", data);
+        throw new Error("Invalid response format from API");
+      }
+
+      const restaurantSessions = sessionsArray.filter(
         (s: ChatSession) => s.restaurant_id === slug
       );
+      console.log(`Filtered ${restaurantSessions.length} sessions for restaurant ${slug}`);
       setSessions(restaurantSessions);
     } catch (error) {
       console.error("Error fetching sessions:", error);
@@ -123,6 +136,8 @@ export default function SupportPage() {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
 
     try {
+      console.log("Creating new chat session:", { subject, restaurant_id: slug });
+
       const response = await fetch(`${apiUrl}/api/v1/chat/sessions`, {
         method: "POST",
         headers: {
@@ -139,11 +154,23 @@ export default function SupportPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to create chat session");
+        const errorData = await response.json().catch(() => ({}));
+        console.error("Failed to create session - API Error:", errorData);
+        throw new Error(errorData.message || `Failed to create chat session: ${response.status} ${response.statusText}`);
       }
 
-      const session = await response.json();
+      const data = await response.json();
+      console.log("Session created response:", data);
+
+      // Handle different response formats - API might return { data: {...} } or { session: {...} } or just {...}
+      const session = data.data || data.session || data;
+
+      if (!session || !session.id) {
+        console.error("Invalid session response format:", data);
+        throw new Error("Invalid response format from API - missing session ID");
+      }
+
+      console.log("New session created successfully:", session.id);
 
       // Wait for session to be fully created before proceeding
       await new Promise(resolve => setTimeout(resolve, 500));
