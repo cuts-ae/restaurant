@@ -18,7 +18,7 @@ import {
   Edit,
   Power,
   PowerOff,
-} from "lucide-react";
+} from "@/components/icons";
 import { capitalizeStatus } from "@/lib/utils";
 
 interface Restaurant {

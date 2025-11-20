@@ -1,0 +1,183 @@
+{
+  "timestamp": "2025-11-19T01:34:11.934Z",
+  "baseURL": "http://localhost:45002",
+  "tests": [
+    {
+      "name": "Login Page",
+      "url": "http://localhost:45002/login",
+      "status": "passed",
+      "errors": [],
+      "warnings": [],
+      "screenshots": [
+        "test-screenshots/portal/01-login-page.png"
+      ],
+      "interactions": [
+        {
+          "element": "Email Input",
+          "found": true
+        },
+        {
+          "element": "Password Input",
+          "found": true
+        },
+        {
+          "element": "Login Button",
+          "found": true
+        },
+        {
+          "element": "Demo Credentials Display",
+          "found": true
+        }
+      ],
+      "loadTime": 782,
+      "timestamp": "2025-11-19T01:34:12.288Z",
+      "pageTitle": "Restaurant Portal - Premium Restaurant Management"
+    },
+    {
+      "name": "Dashboard",
+      "url": "http://localhost:45002/dashboard",
+      "status": "passed",
+      "errors": [],
+      "warnings": [],
+      "screenshots": [
+        "test-screenshots/portal/02-dashboard.png"
+      ],
+      "interactions": [
+        {
+          "element": "Navigation Links",
+          "count": 0
+        },
+        {
+          "element": "Main Content Area",
+          "found": false
+        },
+        {
+          "element": "Dashboard Cards",
+          "count": 2
+        },
+        {
+          "element": "Restaurant/Dashboard Content",
+          "found": true
+        }
+      ],
+      "loadTime": 1075,
+      "timestamp": "2025-11-19T01:34:16.157Z",
+      "redirectedTo": "http://localhost:45002/login",
+      "pageTitle": "Restaurant Portal - Premium Restaurant Management"
+    },
+    {
+      "name": "Orders Page",
+      "url": "http://localhost:45002/restaurant/@restaurant1/orders",
+      "status": "failed",
+      "errors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+        "Failed to fetch myRestaurants: 401",
+        "HTTP 401: http://localhost:45000/api/v1/restaurants/my/restaurants"
+      ],
+      "warnings": [],
+      "screenshots": [
+        "test-screenshots/portal/03-orders-page.png"
+      ],
+      "interactions": [
+        {
+          "element": "Orders Table",
+          "found": false
+        },
+        {
+          "element": "Order Rows/Elements",
+          "count": 7
+        },
+        {
+          "element": "Status Tabs/Filters",
+          "count": 0
+        },
+        {
+          "element": "Status Indicators",
+          "count": 0
+        }
+      ],
+      "loadTime": 1341,
+      "timestamp": "2025-11-19T01:34:20.322Z",
+      "redirectedTo": "http://localhost:45002/login",
+      "pageTitle": "Restaurant Portal - Premium Restaurant Management"
+    },
+    {
+      "name": "Menu Page",
+      "url": "http://localhost:45002/restaurant/@restaurant1/menu",
+      "status": "failed",
+      "errors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+        "Failed to fetch myRestaurants: 401",
+        "HTTP 401: http://localhost:45000/api/v1/restaurants/my/restaurants"
+      ],
+      "warnings": [],
+      "screenshots": [
+        "test-screenshots/portal/04-menu-page.png"
+      ],
+      "interactions": [
+        {
+          "element": "Menu Items",
+          "count": 6
+        },
+        {
+          "element": "Action Buttons (Add/Edit)",
+          "found": false
+        },
+        {
+          "element": "Menu Sections/Categories",
+          "count": 0
+        },
+        {
+          "element": "Menu Item Images",
+          "count": 0
+        }
+      ],
+      "loadTime": 1275,
+      "timestamp": "2025-11-19T01:34:25.760Z",
+      "redirectedTo": "http://localhost:45002/login",
+      "pageTitle": "Restaurant Portal - Premium Restaurant Management"
+    },
+    {
+      "name": "Analytics Page",
+      "url": "http://localhost:45002/restaurant/@restaurant1/analytics",
+      "status": "failed",
+      "errors": [
+        "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+        "Failed to fetch myRestaurants: 401",
+        "HTTP 401: http://localhost:45000/api/v1/restaurants/my/restaurants"
+      ],
+      "warnings": [],
+      "screenshots": [
+        "test-screenshots/portal/05-analytics-page.png"
+      ],
+      "interactions": [
+        {
+          "element": "Charts/Graphs",
+          "count": 0
+        },
+        {
+          "element": "Statistics Cards",
+          "count": 0
+        },
+        {
+          "element": "Date/Time Filters",
+          "count": 0
+        },
+        {
+          "element": "Data Tables",
+          "count": 0
+        }
+      ],
+      "loadTime": 1865,
+      "timestamp": "2025-11-19T01:34:30.124Z",
+      "redirectedTo": "http://localhost:45002/login",
+      "pageTitle": "Restaurant Portal - Premium Restaurant Management"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "passed": 2,
+    "failed": 3,
+    "warnings": 0
+  }
+}

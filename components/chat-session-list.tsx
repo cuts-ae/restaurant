@@ -3,9 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CircularProgress from "@mui/material/CircularProgress";
+import { Clock, CheckCircle, Loader2 } from "@/components/icons";
 
 interface ChatSession {
   id: string;
@@ -59,14 +57,14 @@ export function ChatSessionList({
       case "waiting":
         return (
           <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-            <AccessTimeIcon sx={{ fontSize: 14 }} className="mr-1" />
+            <Clock className="h-3.5 w-3.5 mr-1" />
             Waiting
           </Badge>
         );
       case "active":
         return (
           <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-            <CheckCircleIcon sx={{ fontSize: 14 }} className="mr-1" />
+            <CheckCircle className="h-3.5 w-3.5 mr-1" />
             Active
           </Badge>
         );
@@ -84,7 +82,7 @@ export function ChatSessionList({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <CircularProgress size={32} className="text-muted-foreground" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -93,7 +91,7 @@ export function ChatSessionList({
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center px-4">
         <div className="rounded-full bg-muted p-4 mb-4">
-          <AccessTimeIcon sx={{ fontSize: 40 }} className="text-muted-foreground" />
+          <Clock className="h-10 w-10 text-muted-foreground" />
         </div>
         <h3 className="font-semibold text-lg mb-2">No conversations yet</h3>
         <p className="text-sm text-muted-foreground max-w-xs">

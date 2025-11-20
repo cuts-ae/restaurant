@@ -14,9 +14,13 @@ import {
   Clock,
   XCircle,
   Wand2,
-} from "lucide-react";
+} from "@/components/icons";
 import { generateInvoicePDF, generateMultipleInvoicesPDF } from "./actions";
 import Link from "next/link";
+
+function capitalizeStatus(status: string) {
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
 
 interface Invoice {
   id: string;

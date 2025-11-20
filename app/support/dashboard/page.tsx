@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Users, CheckCircle, Clock } from "lucide-react";
+import { MessageSquare, Users, CheckCircle, Clock } from "@/components/icons";
 
 export default function SupportDashboardPage() {
   const [userName, setUserName] = useState<string>("");
@@ -81,7 +81,7 @@ export default function SupportDashboardPage() {
                   {stat.title}
                 </CardTitle>
                 <div className={`${stat.bgColor} p-2 rounded-md`}>
-                  <Icon className={`h-4 w-4 ${stat.color}`} />
+                  <Icon className={stat.color} size={16} />
                 </div>
               </CardHeader>
               <CardContent>
@@ -103,7 +103,7 @@ export default function SupportDashboardPage() {
           <div className="support-info-box support-info-box-blue">
             <div className="flex items-start gap-3">
               <div className="support-info-icon-wrapper support-info-icon-blue">
-                <MessageSquare className="h-4 w-4 text-gray-700" />
+                <MessageSquare className="text-gray-700" size={16} />
               </div>
               <div>
                 <h3 className="font-medium text-sm text-gray-900">
@@ -138,7 +138,7 @@ export default function SupportDashboardPage() {
           <div className="support-info-box support-info-box-amber">
             <div className="flex items-start gap-3">
               <div className="support-info-icon-wrapper support-info-icon-amber">
-                <Clock className="h-4 w-4 text-gray-700" />
+                <Clock className="text-gray-700" size={16} />
               </div>
               <div>
                 <h3 className="font-medium text-sm text-gray-900">

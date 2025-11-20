@@ -3,17 +3,19 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import PeopleIcon from "@mui/icons-material/People";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import StarIcon from "@mui/icons-material/Star";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import ShowChartIcon from "@mui/icons-material/ShowChart";
-import GpsFixedIcon from "@mui/icons-material/GpsFixed";
+import {
+  TrendingUp,
+  Clock,
+  DollarSign,
+  Package,
+  Users,
+  ShoppingCart,
+  CheckCircle,
+  Star,
+  Calendar,
+  BarChart as BarChartIcon,
+  Target
+} from "@/components/icons";
 import { API_ENDPOINTS } from "@/lib/api";
 import {
   LineChart,
@@ -251,8 +253,8 @@ export default function AnalyticsPage() {
     {
       title: "Revenue Today",
       value: `AED ${analytics.today.revenue.toFixed(2)}`,
-      icon: AttachMoneyIcon,
-      color: "from-gray-900 to-gray-700",
+      icon: ShoppingCart,
+      color: "bg-gray-800",
       trend: calculatedMetrics?.revenueGrowth
         ? `${calculatedMetrics.revenueGrowth > 0 ? '+' : ''}${calculatedMetrics.revenueGrowth.toFixed(1)}%`
         : null
@@ -260,40 +262,40 @@ export default function AnalyticsPage() {
     {
       title: "Orders Today",
       value: analytics.today.orders.toString(),
-      icon: LocalShippingIcon,
-      color: "from-gray-800 to-gray-600",
+      icon: Package,
+      color: "bg-gray-800",
     },
     {
       title: "Avg Order Value Today",
       value: `AED ${calculatedMetrics?.avgOrderValueToday.toFixed(2) || "0.00"}`,
-      icon: ShoppingCartIcon,
-      color: "from-gray-700 to-gray-500",
+      icon: Target,
+      color: "bg-gray-800",
     },
     {
       title: "Revenue This Week",
       value: `AED ${calculatedMetrics?.weeklyRevenue.toFixed(2) || "0.00"}`,
-      icon: CalendarTodayIcon,
-      color: "from-gray-900 to-gray-700",
+      icon: Calendar,
+      color: "bg-gray-800",
     },
     {
       title: "Orders This Week",
       value: calculatedMetrics?.weeklyOrders.toString() || "0",
-      icon: ShowChartIcon,
-      color: "from-gray-800 to-gray-600",
+      icon: BarChartIcon,
+      color: "bg-gray-800",
     },
     {
       title: "Avg Order Value (Week)",
       value: `AED ${calculatedMetrics?.avgOrderValueWeek.toFixed(2) || "0.00"}`,
-      icon: TrendingUpIcon,
-      color: "from-gray-700 to-gray-500",
+      icon: DollarSign,
+      color: "bg-gray-800",
     },
     {
       title: "Peak Hour Today",
       value: calculatedMetrics?.peakHourToday
         ? `${calculatedMetrics.peakHourToday.hour}:00`
         : "No data",
-      icon: AccessTimeIcon,
-      color: "from-gray-600 to-gray-400",
+      icon: Clock,
+      color: "bg-gray-800",
       subtitle: calculatedMetrics?.peakHourToday
         ? `${calculatedMetrics.peakHourToday.orders} orders`
         : ""
@@ -301,20 +303,20 @@ export default function AnalyticsPage() {
     {
       title: "Est. Customers (Week)",
       value: calculatedMetrics?.estimatedCustomers.toString() || "0",
-      icon: PeopleIcon,
-      color: "from-gray-800 to-gray-600",
+      icon: Users,
+      color: "bg-gray-800",
     },
     {
       title: "Fulfillment Rate",
       value: `${calculatedMetrics?.fulfillmentRate.toFixed(1) || "0.0"}%`,
-      icon: CheckCircleIcon,
-      color: "from-gray-700 to-gray-500",
+      icon: CheckCircle,
+      color: "bg-gray-800",
     },
     {
       title: "Top Selling Item",
       value: calculatedMetrics?.mostPopularItem || "N/A",
-      icon: StarIcon,
-      color: "from-gray-900 to-gray-700",
+      icon: Star,
+      color: "bg-gray-800",
       subtitle: analytics.topItems[0]?.count ? `${analytics.topItems[0].count} orders` : ""
     },
   ];
@@ -374,9 +376,9 @@ export default function AnalyticsPage() {
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div
-                    className={`w-10 h-10 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-sm`}
+                    className={`w-10 h-10 rounded-lg ${stat.color} flex items-center justify-center shadow-sm`}
                   >
-                    <Icon className="w-5 h-5 text-white" />
+                    <Icon className="h-5 w-5 text-white" />
                   </div>
                   {stat.trend && (
                     <span className={`text-xs font-semibold px-2 py-1 rounded ${
@@ -409,19 +411,19 @@ export default function AnalyticsPage() {
         <Card className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-[340px] flex flex-col">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
-              <GpsFixedIcon sx={{ fontSize: 20 }} />
+              <Target className="h-5 w-5" />
               Top Selling Items
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 flex-1 overflow-auto">
             {analytics.topItems && analytics.topItems.length > 0 ? (
-              analytics.topItems.slice(0, 5).map((item, index) => (
+              analytics.topItems.slice(0, 4).map((item, index) => (
                 <div
                   key={item.menu_item_id}
                   className="flex items-center justify-between p-2.5 rounded-lg bg-muted/30 hover:bg-muted/50 transition-all"
                 >
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center font-bold text-xs text-white shadow-sm">
+                    <div className="w-7 h-7 rounded-full bg-green-600 flex items-center justify-center font-bold text-xs text-white shadow-sm">
                       {index + 1}
                     </div>
                     <div>
@@ -433,7 +435,7 @@ export default function AnalyticsPage() {
                   </div>
                   <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400"
+                      className="h-full bg-green-600"
                       style={{
                         width: `${Math.min((item.count / (analytics.topItems[0]?.count || 1)) * 100, 100)}%`,
                       }}
@@ -454,20 +456,14 @@ export default function AnalyticsPage() {
         <Card className="animate-in fade-in duration-700 h-[340px] flex flex-col">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
-              <TrendingUpIcon sx={{ fontSize: 20 }} />
+              <TrendingUp className="h-5 w-5" />
               Revenue Trend
             </CardTitle>
           </CardHeader>
           <CardContent className="flex-1">
             {revenueChartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={revenueChartData} margin={{ top: 10, right: 10, left: -20, bottom: 5 }}>
-                  <defs>
-                    <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#10b981" stopOpacity={0.2}/>
-                      <stop offset="100%" stopColor="#10b981" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
+                <LineChart data={revenueChartData} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
                   <CartesianGrid strokeDasharray="0" stroke="#f3f4f6" vertical={false} />
                   <XAxis
                     dataKey="date"
@@ -475,12 +471,15 @@ export default function AnalyticsPage() {
                     fontSize={10}
                     tickLine={false}
                     axisLine={false}
+                    dy={5}
                   />
                   <YAxis
                     stroke="#9ca3af"
                     fontSize={10}
                     tickLine={false}
                     axisLine={false}
+                    domain={[0, 'auto']}
+                    width={35}
                   />
                   <Tooltip
                     contentStyle={{
@@ -496,7 +495,7 @@ export default function AnalyticsPage() {
                     type="monotone"
                     dataKey="revenue"
                     stroke="#10b981"
-                    strokeWidth={3}
+                    strokeWidth={4}
                     name="Revenue (AED)"
                     dot={false}
                     activeDot={{ r: 5, fill: "#10b981", strokeWidth: 2, stroke: "#fff" }}
@@ -515,7 +514,7 @@ export default function AnalyticsPage() {
         <Card className="animate-in fade-in duration-800 h-[340px] flex flex-col">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
-              <LocalShippingIcon sx={{ fontSize: 20 }} />
+              <Package className="h-5 w-5" />
               Daily Orders
             </CardTitle>
           </CardHeader>
@@ -523,12 +522,6 @@ export default function AnalyticsPage() {
             {revenueChartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={revenueChartData} margin={{ top: 10, right: 10, left: -20, bottom: 5 }}>
-                  <defs>
-                    <linearGradient id="orderGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#3b82f6" stopOpacity={1}/>
-                      <stop offset="100%" stopColor="#60a5fa" stopOpacity={0.8}/>
-                    </linearGradient>
-                  </defs>
                   <CartesianGrid strokeDasharray="0" stroke="#f3f4f6" vertical={false} />
                   <XAxis
                     dataKey="date"
@@ -545,18 +538,18 @@ export default function AnalyticsPage() {
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "rgba(59, 130, 246, 0.95)",
+                      backgroundColor: "rgba(37, 99, 235, 0.95)",
                       border: "none",
                       borderRadius: "8px",
                       fontSize: "11px",
                       color: "#fff",
                       padding: "8px 12px",
                     }}
-                    cursor={{ fill: "rgba(59, 130, 246, 0.1)" }}
+                    cursor={{ fill: "rgba(37, 99, 235, 0.1)" }}
                   />
                   <Bar
                     dataKey="orders"
-                    fill="url(#orderGradient)"
+                    fill="#2563eb"
                     radius={[8, 8, 0, 0]}
                     maxBarSize={50}
                   />
@@ -574,7 +567,7 @@ export default function AnalyticsPage() {
         <Card className="animate-in fade-in duration-900 h-[340px] flex flex-col">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
-              <AttachMoneyIcon sx={{ fontSize: 20 }} />
+              <Target className="h-5 w-5" />
               Avg Order Value
             </CardTitle>
           </CardHeader>
@@ -588,12 +581,6 @@ export default function AnalyticsPage() {
                   }))}
                   margin={{ top: 10, right: 10, left: -20, bottom: 5 }}
                 >
-                  <defs>
-                    <linearGradient id="avgGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.2}/>
-                      <stop offset="100%" stopColor="#f59e0b" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
                   <CartesianGrid strokeDasharray="0" stroke="#f3f4f6" vertical={false} />
                   <XAxis
                     dataKey="date"
@@ -610,7 +597,7 @@ export default function AnalyticsPage() {
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "rgba(245, 158, 11, 0.95)",
+                      backgroundColor: "rgba(37, 99, 235, 0.95)",
                       border: "none",
                       borderRadius: "8px",
                       fontSize: "11px",
@@ -621,11 +608,11 @@ export default function AnalyticsPage() {
                   <Line
                     type="monotone"
                     dataKey="avg"
-                    stroke="#f59e0b"
-                    strokeWidth={3}
+                    stroke="#2563eb"
+                    strokeWidth={4}
                     name="Avg Value (AED)"
                     dot={false}
-                    activeDot={{ r: 5, fill: "#f59e0b", strokeWidth: 2, stroke: "#fff" }}
+                    activeDot={{ r: 5, fill: "#2563eb", strokeWidth: 2, stroke: "#fff" }}
                   />
                 </LineChart>
               </ResponsiveContainer>

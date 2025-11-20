@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText } from "lucide-react";
+import { FileText } from "@/components/icons";
 
 export default function SupportReportsPage() {
   return (
@@ -22,7 +22,7 @@ export default function SupportReportsPage() {
         <CardContent>
           <div className="rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100/50 p-8 text-center">
             <div className="inline-flex p-4 rounded-2xl bg-purple-100 mb-4">
-              <FileText className="h-12 w-12 text-purple-600" />
+              <FileText className="text-purple-600" size={48} />
             </div>
             <h3 className="font-bold text-purple-900 mb-2 text-lg">
               Reports Coming Soon

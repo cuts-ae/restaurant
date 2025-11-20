@@ -73,7 +73,7 @@ async function testChatCreation() {
     console.log('STEP 2: Login with owner1@cuts.ae');
     console.log('========================================\n');
     await page.type('input[type="email"]', 'owner1@cuts.ae');
-    await page.type('input[type="password"]', 'password123');
+    await page.type('input[type="password"]', 'TabsTriggerIsnt2026*$');
     await page.click('button[type="submit"]');
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
     await new Promise(r => setTimeout(r, 2000));

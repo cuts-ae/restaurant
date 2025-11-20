@@ -4,9 +4,7 @@ import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import SendIcon from "@mui/icons-material/Send";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { Send, Upload, Clock } from "@/components/icons";
 interface Message {
   id: string;
   content: string;
@@ -60,7 +58,7 @@ export function ChatInterface({
     <div className="flex flex-col items-center justify-center h-full text-center px-8">
       <div className="relative mb-6">
         <div className="rounded-full bg-yellow-100 p-6">
-          <AccessTimeIcon sx={{ fontSize: 48 }} className="text-yellow-600" />
+          <Clock className="h-12 w-12 text-yellow-600" />
         </div>
         <div className="absolute -top-1 -right-1">
           <span className="flex h-4 w-4">
@@ -154,7 +152,7 @@ export function ChatInterface({
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isLoading || sessionStatus === "closed" || disabled}
               >
-                <AttachFileIcon sx={{ fontSize: 20 }} />
+                <Upload className="h-5 w-5" />
               </Button>
             </>
           )}
@@ -179,7 +177,7 @@ export function ChatInterface({
             disabled={!inputMessage.trim() || isLoading || sessionStatus === "closed" || disabled}
             size="icon"
           >
-            <SendIcon sx={{ fontSize: 20 }} />
+            <Send className="h-5 w-5" />
           </Button>
         </form>
       </div>

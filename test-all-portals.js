@@ -12,19 +12,19 @@ const PORTALS = {
   restaurant: {
     url: 'http://localhost:45002',
     name: 'Restaurant Portal',
-    credentials: { email: 'owner1@cuts.ae', password: 'password123' },
+    credentials: { email: 'owner1@cuts.ae', password: 'TabsTriggerIsnt2026*$' },
     pages: ['/dashboard', '/orders', '/menu', '/analytics']
   },
   admin: {
     url: 'http://localhost:45003',
     name: 'Admin Portal',
-    credentials: { email: 'admin@cuts.ae', password: 'password123' },
+    credentials: { email: 'admin@cuts.ae', password: 'TabsTriggerIsnt2026*$' },
     pages: ['/admin/dashboard', '/admin/orders', '/admin/users', '/admin/invoices']
   },
   support: {
     url: 'http://localhost:45004',
     name: 'Support Portal',
-    credentials: { email: 'support@cuts.ae', password: 'password123' },
+    credentials: { email: 'support@cuts.ae', password: 'TabsTriggerIsnt2026*$' },
     pages: ['/support']
   }
 };

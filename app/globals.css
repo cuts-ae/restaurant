@@ -48,12 +48,29 @@
     border-color: var(--color-border);
   }
 
+  html {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-geist-sans), sans-serif;
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    height: auto !important;
+    min-height: 100vh;
+  }
+
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--font-geist-mono), monospace;
   }
 
   /* Hide Next.js development indicator */
@@ -119,6 +136,36 @@
 }
 
 @layer utilities {
+  /* Fat password dots */
+  input[type="password"].password-fat {
+    font-family: text-security-disc;
+    -webkit-text-security: disc;
+    font-size: 32px;
+    line-height: 48px;
+  }
+
+  input[type="password"].password-fat::-webkit-input-placeholder {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    -webkit-text-security: none;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: normal;
+    color: hsl(0 0% 45%);
+    vertical-align: middle;
+  }
+
+  input[type="password"].password-fat::placeholder {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    -webkit-text-security: none;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: normal;
+    color: hsl(0 0% 45%);
+    vertical-align: middle;
+  }
+
   .animate-in {
     animation: enter 200ms ease-out;
   }
@@ -223,7 +270,8 @@
   }
 
   @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0) translateX(0);
     }
     33% {
@@ -235,7 +283,8 @@
   }
 
   @keyframes pulse-glow {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
       transform: scale(1);
     }
@@ -275,7 +324,8 @@
   }
 
   @keyframes pulse-dot {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
     }
     50% {
@@ -288,7 +338,12 @@
 @layer components {
   /* Background & Base - Clean minimal gradient */
   .support-portal-bg {
-    background: linear-gradient(to bottom, #ffffff 0%, #fafafa 50%, #ffffff 100%);
+    background: linear-gradient(
+      to bottom,
+      #ffffff 0%,
+      #fafafa 50%,
+      #ffffff 100%
+    );
     position: relative;
     overflow-x: hidden;
   }
@@ -300,7 +355,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.03) 1px, transparent 0);
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(0, 0, 0, 0.03) 1px,
+      transparent 0
+    );
     background-size: 40px 40px;
     opacity: 1;
     z-index: 0;
@@ -321,7 +380,11 @@
   .support-gradient-orb-1 {
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0.05) 0%,
+      transparent 70%
+    );
     top: -300px;
     right: -200px;
     animation: float 30s ease-in-out infinite;
@@ -330,7 +393,11 @@
   .support-gradient-orb-2 {
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.04) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0.04) 0%,
+      transparent 70%
+    );
     bottom: -250px;
     left: 10%;
     animation: float 35s ease-in-out infinite reverse;
@@ -339,7 +406,11 @@
   .support-gradient-orb-3 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0.03) 0%,
+      transparent 70%
+    );
     top: 40%;
     right: 30%;
     animation: float 40s ease-in-out infinite;
@@ -359,14 +430,22 @@
     position: relative;
     padding: 2px;
     border-radius: 10px;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.02));
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.02)
+    );
   }
 
   .support-logo-container::before {
     content: "";
     position: absolute;
     inset: -2px;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.02));
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.06),
+      rgba(0, 0, 0, 0.02)
+    );
     border-radius: 12px;
     opacity: 0;
     filter: blur(4px);
@@ -501,7 +580,11 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.01) 0%, transparent 50%);
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.01) 0%,
+      transparent 50%
+    );
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -512,7 +595,9 @@
 
   .support-stat-card:hover {
     border-color: rgba(0, 0, 0, 0.12);
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    box-shadow:
+      0 4px 8px 0 rgba(0, 0, 0, 0.06),
+      0 0 0 1px rgba(0, 0, 0, 0.04);
     transform: translateY(-2px);
   }
 

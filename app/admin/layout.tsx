@@ -14,7 +14,7 @@ import {
   User,
   Utensils,
   MessageSquare,
-} from "lucide-react";
+} from "@/components/icons";
 
 export default function AdminLayout({
   children,

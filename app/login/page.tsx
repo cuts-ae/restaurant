@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { API_ENDPOINTS } from "@/lib/api";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { Eye } from "@/components/icons/eye";
+import { EyeOff } from "@/components/icons/eye-off";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -103,7 +103,7 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label
                   htmlFor="email"
                   className="text-sm font-medium leading-none"
@@ -124,7 +124,7 @@ export default function LoginPage() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label
                   htmlFor="password"
                   className="text-sm font-medium leading-none"
@@ -147,14 +147,10 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-all duration-200 cursor-pointer disabled:cursor-not-allowed hover:scale-110"
                     disabled={isLoading}
                   >
-                    {showPassword ? (
-                      <VisibilityOffIcon sx={{ fontSize: 24 }} />
-                    ) : (
-                      <VisibilityIcon sx={{ fontSize: 24 }} />
-                    )}
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
               </div>
@@ -177,7 +173,7 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={isLoading || success}
-              className="w-full h-12 text-base font-medium"
+              className="w-full h-12 text-base font-medium hover:scale-[1.02] active:scale-[0.98] transition-transform"
             >
               {success ? "Success!" : isLoading ? "Signing in..." : "Sign in"}
             </Button>
@@ -185,16 +181,19 @@ export default function LoginPage() {
             <div className="text-center">
               <button
                 type="button"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer relative group"
               >
-                Forgot your password?
+                <span className="relative pb-1">
+                  Forgot your password?
+                  <span className="absolute -bottom-0.5 left-1/2 w-0 h-[1px] bg-foreground transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
+                </span>
               </button>
             </div>
           </form>
         </CardContent>
       </Card>
 
-      <div className="absolute top-1/2 left-1/2 -translate-y-1/2 translate-x-[calc(50%+1.5rem)] w-[450px] animate-in fade-in slide-in-from-right duration-700 hidden lg:block">
+      <div className="absolute top-1/2 left-1/2 -translate-y-1/2 translate-x-[calc(50%+2.5rem)] w-[450px] animate-in fade-in slide-in-from-right duration-700 hidden lg:block">
         <div className="relative backdrop-blur-sm bg-card/30 border-2 border-dashed border-border/60 rounded-xl p-6 shadow-lg">
           <div className="absolute -top-3 left-4 bg-background px-2">
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
@@ -204,26 +203,43 @@ export default function LoginPage() {
 
           <div className="space-y-4 mt-2">
             <div className="flex items-start gap-3">
-              <div className="mt-1 flex-shrink-0">
+              <div className="mt-0.5 flex-shrink-0">
                 <svg
                   className="w-5 h-5 text-blue-500"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  strokeWidth={1.5}
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
               </div>
-              <div className="space-y-3 flex-1">
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  For development and testing purposes, use these credentials:
-                </p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                For development and testing purposes, use these credentials:
+              </p>
+            </div>
 
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0">
+                <svg
+                  className="w-5 h-5 text-muted-foreground"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+              </div>
+              <div className="space-y-3 flex-1">
                 <div className="space-y-3 bg-muted/30 rounded-lg p-4 border border-border/40">
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
@@ -232,7 +248,7 @@ export default function LoginPage() {
                       </span>
                     </div>
                     <code className="block text-sm font-mono bg-background/80 px-3 py-2 rounded border border-border/50 text-foreground">
-                      owner1@cuts.ae
+                      salim.almansouri@cuts.ae
                     </code>
                   </div>
 
@@ -243,31 +259,33 @@ export default function LoginPage() {
                       </span>
                     </div>
                     <code className="block text-sm font-mono bg-background/80 px-3 py-2 rounded border border-border/50 text-foreground">
-                      password123
+                      TabsTriggerIsnt2026*$
                     </code>
                   </div>
                 </div>
-
-                <div className="flex items-start gap-2 pt-2">
-                  <svg
-                    className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                    />
-                  </svg>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    These credentials are for demo purposes only and should not
-                    be used in production.
-                  </p>
-                </div>
               </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 flex-shrink-0">
+                <svg
+                  className="w-5 h-5 text-amber-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                These credentials are for demo purposes only and should not be
+                used in production.
+              </p>
             </div>
           </div>
         </div>

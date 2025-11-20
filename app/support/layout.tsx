@@ -11,7 +11,7 @@ import {
   FileText,
   LogOut,
   User,
-} from "lucide-react";
+} from "@/components/icons";
 
 export default function SupportLayout({
   children,
@@ -134,7 +134,7 @@ export default function SupportLayout({
             </div>
             <div className="flex items-center gap-2.5">
               <div className="support-user-badge">
-                <User className="w-3.5 h-3.5 text-gray-600" />
+                <User className="text-gray-600" size={14} />
                 <span className="text-sm font-medium text-gray-700">{userEmail}</span>
               </div>
               <Button
@@ -143,7 +143,7 @@ export default function SupportLayout({
                 onClick={handleLogout}
                 className="gap-2 support-logout-btn text-sm"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <LogOut size={14} />
                 Logout
               </Button>
             </div>
@@ -169,7 +169,7 @@ export default function SupportLayout({
                     animationDelay: `${index * 50}ms`,
                   }}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon size={16} />
                   <span>{item.label}</span>
                   {isActive && <div className="support-nav-active-indicator"></div>}
                 </Link>

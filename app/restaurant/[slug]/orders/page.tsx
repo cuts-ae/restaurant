@@ -2,14 +2,11 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
+import { Badge } from "@/components/ui/badge";
+import { Clock, MapPin, User, Phone } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { API_ENDPOINTS } from "@/lib/api";
 
@@ -39,51 +36,46 @@ interface Order {
   users?: {
     first_name: string;
     last_name: string;
+    phone?: string;
   };
 }
 
 const statusConfig = {
   pending: {
     label: "Pending",
-    color: "bg-amber-500/10 text-amber-500 border-amber-500/20",
-    icon: AccessTimeIcon,
+    color: "bg-amber-50 text-amber-700 border-amber-200",
+    dotColor: "bg-amber-500",
   },
   confirmed: {
     label: "Confirmed",
-    color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-    icon: LocalShippingIcon,
+    color: "bg-blue-50 text-blue-700 border-blue-200",
+    dotColor: "bg-blue-500",
   },
   preparing: {
     label: "Preparing",
-    color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-    icon: LocalShippingIcon,
+    color: "bg-purple-50 text-purple-700 border-purple-200",
+    dotColor: "bg-purple-500",
   },
   ready: {
     label: "Ready",
-    color: "bg-green-500/10 text-green-500 border-green-500/20",
-    icon: CheckCircleIcon,
-  },
-  picked_up: {
-    label: "Picked Up",
-    color: "bg-green-500/10 text-green-500 border-green-500/20",
-    icon: CheckCircleIcon,
-  },
-  in_transit: {
-    label: "In Transit",
-    color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-    icon: LocalShippingIcon,
+    color: "bg-green-50 text-green-700 border-green-200",
+    dotColor: "bg-green-500",
   },
   delivered: {
     label: "Delivered",
-    color: "bg-green-500/10 text-green-500 border-green-500/20",
-    icon: CheckCircleIcon,
+    color: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    dotColor: "bg-emerald-500",
+  },
+  cancelled: {
+    label: "Cancelled",
+    color: "bg-red-50 text-red-700 border-red-200",
+    dotColor: "bg-red-500",
   },
 };
 
 export default function OrdersPage() {
   const params = useParams();
   const restaurantSlug = decodeURIComponent(params.slug as string);
-  // Remove @ from slug for localStorage key
   const cleanSlug = useMemo(
     () =>
       restaurantSlug.startsWith("@")
@@ -92,14 +84,12 @@ export default function OrdersPage() {
     [restaurantSlug]
   );
 
-  const [filter, setFilter] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState<string>("pending");
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [updatingOrders, setUpdatingOrders] = useState<Set<string>>(new Set());
   const [restaurantId, setRestaurantId] = useState<string>("");
 
   useEffect(() => {
-    // Get restaurant ID from localStorage first
     const restaurantData = localStorage.getItem(`restaurant-${cleanSlug}`);
     if (restaurantData) {
       try {
@@ -111,7 +101,6 @@ export default function OrdersPage() {
       }
     }
 
-    // Fallback: Fetch from API
     const fetchRestaurantId = async () => {
       try {
         const token = localStorage.getItem("auth-token");
@@ -133,11 +122,9 @@ export default function OrdersPage() {
               JSON.stringify(restaurant),
             );
           } else {
-            console.error("Restaurant not found in myRestaurants");
             setIsLoading(false);
           }
         } else {
-          console.error("Failed to fetch myRestaurants:", response.status);
           setIsLoading(false);
         }
       } catch (error) {
@@ -154,12 +141,12 @@ export default function OrdersPage() {
 
     fetchOrders();
 
-    // PERFORMANCE: Only poll when page is visible
+    // Poll every 5 seconds for real-time updates
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") {
         fetchOrders();
       }
-    }, 10000);
+    }, 5000);
 
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -170,7 +157,10 @@ export default function OrdersPage() {
 
     try {
       const token = localStorage.getItem("auth-token");
-      const response = await fetch(API_ENDPOINTS.orders.list(restaurantId), {
+      const url = API_ENDPOINTS.orders.list(restaurantId);
+      console.log("Fetching orders from:", url);
+
+      const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -178,10 +168,30 @@ export default function OrdersPage() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Orders fetched successfully:", data.orders?.length || 0);
-        setOrders(data.orders || []);
+        console.log("Received orders:", data.orders?.length || 0);
+
+        // Filter for today's orders only
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const todaysOrders = (data.orders || []).filter((order: Order) => {
+          const orderDate = new Date(order.created_at);
+          orderDate.setHours(0, 0, 0, 0);
+          return orderDate.getTime() === today.getTime();
+        });
+
+        console.log("Today's orders:", todaysOrders.length);
+        console.log("Orders by status:", {
+          pending: todaysOrders.filter((o: Order) => o.status === 'pending').length,
+          confirmed: todaysOrders.filter((o: Order) => o.status === 'confirmed').length,
+          preparing: todaysOrders.filter((o: Order) => o.status === 'preparing').length,
+          ready: todaysOrders.filter((o: Order) => o.status === 'ready').length,
+          delivered: todaysOrders.filter((o: Order) => o.status === 'delivered').length,
+        });
+
+        setOrders(todaysOrders);
       } else {
-        console.error("Failed to fetch orders:", response.status, response.statusText);
+        console.error("Failed to fetch orders, status:", response.status);
         setOrders([]);
       }
     } catch (error) {
@@ -192,71 +202,52 @@ export default function OrdersPage() {
     }
   };
 
-  const updateOrderStatus = async (orderId: string, newStatus: string) => {
-    setUpdatingOrders((prev) => new Set(prev).add(orderId));
-
-    // PERFORMANCE: Optimistic update - update UI immediately
-    const previousOrders = [...orders];
-    setOrders((prev) =>
-      prev.map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order,
-      ),
-    );
-
+  const handleUpdateStatus = async (orderId: string, newStatus: string) => {
     try {
       const token = localStorage.getItem("auth-token");
       const response = await fetch(API_ENDPOINTS.orders.updateStatus(orderId), {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ status: newStatus }),
       });
 
-      if (!response.ok) {
-        // Revert on error
-        setOrders(previousOrders);
-        const error = await response.json();
-        alert(`Failed to update order: ${error.error || "Unknown error"}`);
+      if (response.ok) {
+        fetchOrders();
       }
     } catch (error) {
-      // Revert on error
-      setOrders(previousOrders);
-      console.error("Failed to update order:", error);
-      alert("Failed to update order. Please try again.");
-    } finally {
-      setUpdatingOrders((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(orderId);
-        return newSet;
-      });
+      console.error("Failed to update order status:", error);
     }
   };
 
-  const filteredOrders =
-    filter === "all"
-      ? orders
-      : orders.filter((order) => order.status === filter);
+  const getFilteredOrders = (status: string) => {
+    if (status === "all") return orders;
+    return orders.filter((order) => order.status === status);
+  };
 
-  const filters = [
-    { value: "all", label: "All Orders" },
-    { value: "pending", label: "Pending" },
-    { value: "confirmed", label: "Confirmed" },
-    { value: "preparing", label: "Preparing" },
-    { value: "ready", label: "Ready" },
-  ];
-
-  const getTimeAgo = (dateString: string) => {
+  const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    const now = new Date();
-    const diff = Math.floor((now.getTime() - date.getTime()) / 1000 / 60);
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
 
-    if (diff < 1) return "Just now";
-    if (diff < 60) return `${diff} mins ago`;
-    const hours = Math.floor(diff / 60);
-    if (hours < 24) return `${hours} hours ago`;
-    return `${Math.floor(hours / 24)} days ago`;
+  const getNextStatus = (currentStatus: string): string | null => {
+    const statusFlow = [
+      "pending",
+      "confirmed",
+      "preparing",
+      "ready",
+      "delivered",
+    ];
+    const currentIndex = statusFlow.indexOf(currentStatus);
+    if (currentIndex === -1 || currentIndex === statusFlow.length - 1)
+      return null;
+    return statusFlow[currentIndex + 1];
   };
 
   if (isLoading) {
@@ -268,187 +259,203 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-6 animate-in fade-in duration-500">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold tracking-tight">Order Management</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Today's Orders</h2>
         <p className="text-muted-foreground">
-          View and manage incoming orders in real-time
+          Manage and track orders received today
         </p>
       </div>
 
-      <div className="flex gap-2 flex-wrap">
-        {filters.map((f) => (
-          <Button
-            key={f.value}
-            variant={filter === f.value ? "default" : "outline"}
-            onClick={() => setFilter(f.value)}
-            className="transition-all duration-200"
-          >
-            {f.label}
-          </Button>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full max-w-3xl grid-cols-5 h-11">
+          <TabsTrigger value="pending" className="gap-2">
+            Pending
+            {getFilteredOrders("pending").length > 0 && (
+              <span className="ml-1 px-2 py-0.5 text-xs font-medium bg-amber-500 text-white rounded-full">
+                {getFilteredOrders("pending").length}
+              </span>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="confirmed" className="gap-2">
+            Confirmed
+            {getFilteredOrders("confirmed").length > 0 && (
+              <span className="ml-1 px-2 py-0.5 text-xs font-medium bg-blue-500 text-white rounded-full">
+                {getFilteredOrders("confirmed").length}
+              </span>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="preparing" className="gap-2">
+            Preparing
+            {getFilteredOrders("preparing").length > 0 && (
+              <span className="ml-1 px-2 py-0.5 text-xs font-medium bg-purple-500 text-white rounded-full">
+                {getFilteredOrders("preparing").length}
+              </span>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="ready" className="gap-2">
+            Ready
+            {getFilteredOrders("ready").length > 0 && (
+              <span className="ml-1 px-2 py-0.5 text-xs font-medium bg-green-500 text-white rounded-full">
+                {getFilteredOrders("ready").length}
+              </span>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="delivered" className="gap-2">
+            Delivered
+            {getFilteredOrders("delivered").length > 0 && (
+              <span className="ml-1 px-2 py-0.5 text-xs font-medium bg-emerald-500 text-white rounded-full">
+                {getFilteredOrders("delivered").length}
+              </span>
+            )}
+          </TabsTrigger>
+        </TabsList>
+
+        {["pending", "confirmed", "preparing", "ready", "delivered"].map((status) => (
+          <TabsContent key={status} value={status} className="mt-6">
+            {getFilteredOrders(status).length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="flex items-center justify-center py-12">
+                  <p className="text-muted-foreground">
+                    No {status === "all" ? "" : status} orders today
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-6">
+                {getFilteredOrders(status).map((order) => {
+                  const customerName = order.users
+                    ? `${order.users.first_name} ${order.users.last_name}`
+                    : "Customer";
+                  const nextStatus = getNextStatus(order.status);
+
+                  return (
+                    <Card
+                      key={order.id}
+                      className="hover:shadow-lg transition-all duration-300"
+                    >
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-3">
+                              <CardTitle className="text-xl">
+                                Order {order.order_number}
+                              </CardTitle>
+                              <Badge
+                                className={cn(
+                                  "border",
+                                  statusConfig[
+                                    order.status as keyof typeof statusConfig
+                                  ]?.color || "bg-gray-100 text-gray-700"
+                                )}
+                              >
+                                {statusConfig[
+                                  order.status as keyof typeof statusConfig
+                                ]?.label || order.status}
+                              </Badge>
+                            </div>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-1">
+                                <Clock className="w-4 h-4" />
+                                {formatTime(order.created_at)}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <User className="w-4 h-4" />
+                                {customerName}
+                              </div>
+                              {order.users?.phone && (
+                                <div className="flex items-center gap-1">
+                                  <Phone className="w-4 h-4" />
+                                  {order.users.phone}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-2xl font-bold">
+                              AED {Number(order.total_amount).toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+                      </CardHeader>
+
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                          <h4 className="font-semibold text-sm">Order Items</h4>
+                          <div className="space-y-2">
+                            {order.order_items && order.order_items.length > 0 ? (
+                              order.order_items.map((item) => (
+                                <div
+                                  key={item.id}
+                                  className="flex items-center justify-between py-2 px-3 bg-muted/50 rounded-lg"
+                                >
+                                  <div className="flex-1">
+                                    <p className="font-medium">
+                                      {item.menu_items?.name || "Unknown Item"}
+                                    </p>
+                                    {item.special_instructions && (
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        Note: {item.special_instructions}
+                                      </p>
+                                    )}
+                                  </div>
+                                  <div className="flex items-center gap-4">
+                                    <span className="text-sm text-muted-foreground">
+                                      Qty: {item.quantity}
+                                    </span>
+                                    <span className="font-medium">
+                                      AED {Number(item.item_total).toFixed(2)}
+                                    </span>
+                                  </div>
+                                </div>
+                              ))
+                            ) : (
+                              <p className="text-sm text-muted-foreground py-2">
+                                No items in this order
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-2 pt-2">
+                          <MapPin className="w-4 h-4 mt-1 text-muted-foreground" />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">
+                              Delivery Address
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {order.delivery_address?.street || "N/A"},{" "}
+                              {order.delivery_address?.city || "N/A"}
+                            </p>
+                          </div>
+                        </div>
+
+                        {nextStatus && (
+                          <div className="flex justify-end pt-2 border-t">
+                            <Button
+                              onClick={() =>
+                                handleUpdateStatus(order.id, nextStatus)
+                              }
+                              className="gap-2"
+                            >
+                              Mark as{" "}
+                              {
+                                statusConfig[
+                                  nextStatus as keyof typeof statusConfig
+                                ]?.label
+                              }
+                            </Button>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </TabsContent>
         ))}
-      </div>
-
-      <div className="space-y-4">
-        {filteredOrders.map((order, index) => {
-          const StatusIcon =
-            statusConfig[order.status as keyof typeof statusConfig]?.icon ||
-            AccessTimeIcon;
-          const isUpdating = updatingOrders.has(order.id);
-          const customerName = order.users
-            ? `${order.users.first_name} ${order.users.last_name}`
-            : "Customer";
-
-          return (
-            <Card
-              key={order.id}
-              className="group hover:shadow-lg transition-shadow duration-200"
-            >
-              <CardContent className="p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                  <div className="space-y-4 flex-1">
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                          <h3 className="text-xl font-bold">
-                            {order.order_number}
-                          </h3>
-                          <span
-                            className={cn(
-                              "px-3 py-1 rounded-full text-xs font-medium border flex items-center gap-1.5",
-                              statusConfig[
-                                order.status as keyof typeof statusConfig
-                              ]?.color ||
-                                "bg-gray-500/10 text-gray-500 border-gray-500/20",
-                            )}
-                          >
-                            <StatusIcon sx={{ fontSize: 16 }} />
-                            {statusConfig[
-                              order.status as keyof typeof statusConfig
-                            ]?.label || order.status}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1.5">
-                            <AccessTimeIcon sx={{ fontSize: 20 }} />
-                            {getTimeAgo(order.created_at)}
-                          </span>
-                          <span className="flex items-center gap-1.5">
-                            <LocationOnIcon sx={{ fontSize: 20 }} />
-                            {order.delivery_address?.street || "N/A"},{" "}
-                            {order.delivery_address?.city || "N/A"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <p className="text-sm font-medium">{customerName}</p>
-                      <div className="space-y-1">
-                        {order.order_items.map((item) => (
-                          <p
-                            key={item.id}
-                            className="text-sm text-muted-foreground"
-                          >
-                            {item.menu_items?.name || "Unknown Item"} x
-                            {item.quantity}
-                            {item.special_instructions && (
-                              <span className="text-xs italic">
-                                {" "}
-                                - {item.special_instructions}
-                              </span>
-                            )}
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 pt-2 border-t border-border/50">
-                      <span className="text-2xl font-bold">
-                        AED {Number(order.total_amount).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex lg:flex-col gap-2 lg:w-48">
-                    {order.status === "pending" && (
-                      <>
-                        <Button
-                          className="flex-1 lg:w-full gap-2 shadow-sm"
-                          onClick={() =>
-                            updateOrderStatus(order.id, "confirmed")
-                          }
-                          disabled={isUpdating}
-                        >
-                          <CheckCircleIcon sx={{ fontSize: 20 }} />
-                          {isUpdating ? "Updating..." : "Accept"}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="flex-1 lg:w-full gap-2 text-destructive hover:text-destructive"
-                          onClick={() =>
-                            updateOrderStatus(order.id, "cancelled")
-                          }
-                          disabled={isUpdating}
-                        >
-                          <CancelIcon sx={{ fontSize: 20 }} />
-                          Reject
-                        </Button>
-                      </>
-                    )}
-                    {order.status === "confirmed" && (
-                      <Button
-                        className="flex-1 lg:w-full gap-2 shadow-sm"
-                        onClick={() => updateOrderStatus(order.id, "preparing")}
-                        disabled={isUpdating}
-                      >
-                        <LocalShippingIcon sx={{ fontSize: 20 }} />
-                        {isUpdating ? "Updating..." : "Start Preparing"}
-                      </Button>
-                    )}
-                    {order.status === "preparing" && (
-                      <Button
-                        className="flex-1 lg:w-full gap-2 shadow-sm"
-                        onClick={() => updateOrderStatus(order.id, "ready")}
-                        disabled={isUpdating}
-                      >
-                        <CheckCircleIcon sx={{ fontSize: 20 }} />
-                        {isUpdating ? "Updating..." : "Mark Ready"}
-                      </Button>
-                    )}
-                    {order.status === "ready" && (
-                      <div className="flex-1 lg:w-full p-4 rounded-md bg-muted/50 border border-border text-center">
-                        <p className="text-sm text-muted-foreground">
-                          Waiting for driver pickup
-                        </p>
-                      </div>
-                    )}
-                    {order.status === "picked_up" && (
-                      <div className="flex-1 lg:w-full p-4 rounded-md bg-green-50 border border-green-200 text-center">
-                        <p className="text-sm text-green-700">
-                          Out for delivery
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {filteredOrders.length === 0 && (
-        <div className="text-center py-12">
-          <LocalShippingIcon sx={{ fontSize: 64 }} className="mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-xl font-semibold mb-2">No orders found</h3>
-          <p className="text-muted-foreground">
-            {filter === "all"
-              ? "No orders yet. New orders will appear here."
-              : `No ${filter} orders at the moment.`}
-          </p>
-        </div>
-      )}
+      </Tabs>
     </div>
   );
 }

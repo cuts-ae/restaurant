@@ -13,8 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import SendIcon from "@mui/icons-material/Send";
-import CircularProgress from "@mui/material/CircularProgress";
+import { Send, Loader2 } from "@/components/icons";
 
 interface NewChatDialogProps {
   onCreateChat: (subject: string, message: string) => Promise<void>;
@@ -112,12 +111,12 @@ export function NewChatDialog({
             <Button type="submit" disabled={isSubmitting} className="gap-2">
               {isSubmitting ? (
                 <>
-                  <CircularProgress size={16} className="text-current" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                   Starting...
                 </>
               ) : (
                 <>
-                  <SendIcon sx={{ fontSize: 20 }} />
+                  <Send className="h-5 w-5" />
                   Start Chat
                 </>
               )}

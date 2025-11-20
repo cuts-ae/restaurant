@@ -106,7 +106,7 @@ async function comprehensiveSupportTest() {
     console.log('Attempting login with owner@burgerspot.com...');
 
     await page.type('input[type="email"]', 'owner@burgerspot.com', { delay: 50 });
-    await page.type('input[type="password"]', 'password123', { delay: 50 });
+    await page.type('input[type="password"]', 'TabsTriggerIsnt2026*$', { delay: 50 });
 
     const credentialsScreenshot = 'step-02-credentials-entered.png';
     await page.screenshot({
@@ -159,7 +159,7 @@ async function comprehensiveSupportTest() {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       await page.type('input[type="email"]', 'owner1@cuts.ae', { delay: 50 });
-      await page.type('input[type="password"]', 'password123', { delay: 50 });
+      await page.type('input[type="password"]', 'TabsTriggerIsnt2026*$', { delay: 50 });
 
       const altCredsScreenshot = 'step-04-alternate-credentials.png';
       await page.screenshot({

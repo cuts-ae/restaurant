@@ -8,12 +8,12 @@ const API_URL = 'http://localhost:45000';
 
 const RESTAURANT_CREDENTIALS = {
   email: 'owner1@cuts.ae',
-  password: 'password123'
+  password: 'TabsTriggerIsnt2026*$'
 };
 
 const SUPPORT_CREDENTIALS = {
   email: 'support@cuts.ae',
-  password: 'password123'
+  password: 'TabsTriggerIsnt2026*$'
 };
 
 const TEST_MESSAGES = {

@@ -15,7 +15,7 @@ import {
   Calendar,
   Mail,
   Phone,
-} from "lucide-react";
+} from "@/components/icons";
 
 interface SupportTicket {
   id: string;

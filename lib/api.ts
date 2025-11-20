@@ -16,6 +16,7 @@ export const API_ENDPOINTS = {
   orders: {
     list: (restaurantId: string) =>
       `${API_URL}/api/v1/orders?restaurant_id=${restaurantId}`,
+    getById: (orderId: string) => `${API_URL}/api/v1/orders/${orderId}`,
     updateStatus: (orderId: string) =>
       `${API_URL}/api/v1/orders/${orderId}/status`,
   },

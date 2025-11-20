@@ -47,7 +47,7 @@ async function testSupportChat() {
 
     console.log('\n=== STEP 2: Logging in ===');
     await page.type('input[type="email"]', 'owner@burgerspot.com');
-    await page.type('input[type="password"]', 'password123');
+    await page.type('input[type="password"]', 'TabsTriggerIsnt2026*$');
     await page.screenshot({ path: '/Users/sour/Projects/cuts.ae/restaurant/screenshots/support-chat-02-credentials-entered.png', fullPage: true });
     console.log('Screenshot saved: support-chat-02-credentials-entered.png');
 

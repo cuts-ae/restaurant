@@ -62,7 +62,7 @@ async function testOrdersPage() {
     console.log('STEP 2: Filling credentials...');
     await page.waitForSelector('input[type="email"]');
     await page.type('input[type="email"]', 'owner1@cuts.ae');
-    await page.type('input[type="password"]', 'password123');
+    await page.type('input[type="password"]', 'TabsTriggerIsnt2026*$');
 
     console.log('STEP 3: Clicking login button...');
     await page.click('button[type="submit"]');

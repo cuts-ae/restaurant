@@ -20,7 +20,7 @@ import {
   Loader2,
   X,
   FileText,
-} from "lucide-react";
+} from "@/components/icons";
 import { API_ENDPOINTS } from "@/lib/api";
 
 interface Message {

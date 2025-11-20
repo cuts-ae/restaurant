@@ -14,7 +14,7 @@ import {
   Calendar,
   UserCheck,
   UserX,
-} from "lucide-react";
+} from "@/components/icons";
 import { capitalizeStatus } from "@/lib/utils";
 
 interface User {

@@ -26,7 +26,7 @@ async function testSupportPortal() {
     url: 'http://localhost:45004',
     credentials: {
       email: 'support@cuts.ae',
-      password: 'password123'
+      password: 'TabsTriggerIsnt2026*$'
     },
     dashboard: {},
     console: [],
@@ -95,7 +95,7 @@ async function testSupportPortal() {
     console.log('\n=== STEP 2: Enter Credentials ===');
     await page.waitForSelector('input[type="email"], input[name="email"]', { timeout: 5000 });
     await page.type('input[type="email"], input[name="email"]', 'support@cuts.ae');
-    await page.type('input[type="password"], input[name="password"]', 'password123');
+    await page.type('input[type="password"], input[name="password"]', 'TabsTriggerIsnt2026*$');
     await page.screenshot({ path: path.join(screenshotsDir, '02-credentials-entered.png'), fullPage: true });
     console.log('Screenshot: 02-credentials-entered.png');
 

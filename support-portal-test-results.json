@@ -1,0 +1,104 @@
+{
+  "timestamp": "2025-11-19T01:34:07.751Z",
+  "tests": [
+    {
+      "name": "Login Page - Navigation",
+      "status": "PASS",
+      "details": "Status: 200",
+      "screenshot": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/support-portal/login_page_initial_1763516049382.png",
+      "timestamp": "2025-11-19T01:34:09.453Z"
+    },
+    {
+      "name": "Login Page - Title",
+      "status": "PASS",
+      "details": "Title: \"Support Portal - Cuts.ae\"",
+      "screenshot": null,
+      "timestamp": "2025-11-19T01:34:09.454Z"
+    },
+    {
+      "name": "Login Page - Email Input",
+      "status": "PASS",
+      "details": "Email input field found",
+      "screenshot": null,
+      "timestamp": "2025-11-19T01:34:09.460Z"
+    },
+    {
+      "name": "Login Page - Password Input",
+      "status": "PASS",
+      "details": "Password input field found",
+      "screenshot": null,
+      "timestamp": "2025-11-19T01:34:09.460Z"
+    },
+    {
+      "name": "Login Page - Submit Button",
+      "status": "PASS",
+      "details": "Submit button found",
+      "screenshot": null,
+      "timestamp": "2025-11-19T01:34:09.461Z"
+    },
+    {
+      "name": "Login Page - Form Fill",
+      "status": "PASS",
+      "details": "Credentials entered successfully",
+      "screenshot": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/support-portal/login_page_filled_1763516051425.png",
+      "timestamp": "2025-11-19T01:34:11.466Z"
+    },
+    {
+      "name": "Login Page - Authentication",
+      "status": "FAIL",
+      "details": "Login failed - still on login page",
+      "screenshot": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/support-portal/login_page_after_submit_1763516083471.png",
+      "timestamp": "2025-11-19T01:34:43.519Z"
+    },
+    {
+      "name": "Dashboard - Access",
+      "status": "FAIL",
+      "details": "Could not access dashboard, still on login page",
+      "screenshot": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/support-portal/dashboard_initial_1763516119552.png",
+      "timestamp": "2025-11-19T01:35:19.625Z"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "login_page_initial",
+      "path": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/support-portal/login_page_initial_1763516049382.png",
+      "timestamp": "2025-11-19T01:34:09.453Z"
+    },
+    {
+      "name": "login_page_filled",
+      "path": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/support-portal/login_page_filled_1763516051425.png",
+      "timestamp": "2025-11-19T01:34:11.466Z"
+    },
+    {
+      "name": "login_page_after_submit",
+      "path": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/support-portal/login_page_after_submit_1763516083471.png",
+      "timestamp": "2025-11-19T01:34:43.518Z"
+    },
+    {
+      "name": "dashboard_initial",
+      "path": "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/support-portal/dashboard_initial_1763516119552.png",
+      "timestamp": "2025-11-19T01:35:19.625Z"
+    }
+  ],
+  "consoleErrors": [
+    {
+      "page": "login",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "timestamp": "2025-11-19T01:34:11.552Z"
+    },
+    {
+      "page": "dashboard",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "timestamp": "2025-11-19T01:34:46.590Z"
+    }
+  ],
+  "networkErrors": [],
+  "summary": {
+    "total": 8,
+    "passed": 6,
+    "failed": 2,
+    "warnings": 0
+  }
+}

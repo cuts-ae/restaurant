@@ -5,14 +5,15 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Package, Clock, User, LogOut } from "lucide-react";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import LogoutIcon from "@mui/icons-material/Logout";
-import PersonIcon from "@mui/icons-material/Person";
-import ChatIcon from "@mui/icons-material/Chat";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import {
+  Utensils,
+  Package,
+  BarChart,
+  LogOut,
+  User,
+  MessageSquare,
+  Clock,
+} from "@/components/icons";
 import { API_ENDPOINTS } from "@/lib/api";
 import { RestaurantStatusToggle } from "@/components/restaurant-status-toggle";
 
@@ -109,30 +110,38 @@ export default function RestaurantLayout({
     {
       value: "orders",
       label: "Orders",
-      icon: LocalShippingIcon,
+      icon: Package,
       href: `/restaurant/${restaurantSlug}/orders`,
+    },
+    {
+      value: "history",
+      label: "History",
+      icon: Clock,
+      href: `/restaurant/${restaurantSlug}/history`,
     },
     {
       value: "menu",
       label: "Menu",
-      icon: RestaurantIcon,
+      icon: Utensils,
       href: `/restaurant/${restaurantSlug}/menu`,
     },
     {
       value: "analytics",
       label: "Analytics",
-      icon: BarChartIcon,
+      icon: BarChart,
       href: `/restaurant/${restaurantSlug}/analytics`,
     },
     {
       value: "support",
       label: "Support",
-      icon: ChatIcon,
+      icon: MessageSquare,
       href: `/restaurant/${restaurantSlug}/support`,
     },
   ];
 
-  const activeTab = pathname?.includes("/orders")
+  const activeTab = pathname?.includes("/history")
+    ? "history"
+    : pathname?.includes("/orders")
     ? "orders"
     : pathname?.includes("/menu")
       ? "menu"
@@ -171,7 +180,7 @@ export default function RestaurantLayout({
 
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/30 border border-border/40">
-                <AccessTimeIcon sx={{ fontSize: 20 }} className="text-muted-foreground" />
+                <Clock className="w-5 h-5 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">9am - 8pm</span>
               </div>
               {restaurantId && (
@@ -195,7 +204,7 @@ export default function RestaurantLayout({
                 />
               )}
               <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/50 border border-border/50">
-                <PersonIcon sx={{ fontSize: 20 }} className="text-muted-foreground" />
+                <User className="w-5 h-5 text-muted-foreground" />
                 <span className="text-sm font-medium">{userEmail}</span>
               </div>
               <Button
@@ -204,14 +213,14 @@ export default function RestaurantLayout({
                 onClick={handleLogout}
                 className="gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 transition-all"
               >
-                <LogoutIcon sx={{ fontSize: 20 }} />
+                <LogOut className="w-5 h-5" />
                 Logout
               </Button>
             </div>
           </div>
 
           <Tabs value={activeTab} className="w-full">
-            <TabsList className="grid w-full max-w-2xl grid-cols-4 h-12 bg-muted/50">
+            <TabsList className="grid w-full max-w-3xl grid-cols-5 h-12 bg-muted/50">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -220,7 +229,7 @@ export default function RestaurantLayout({
                       value={tab.value}
                       className="w-full gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all"
                     >
-                      <Icon sx={{ fontSize: 20 }} />
+                      <Icon className="w-5 h-5" />
                       {tab.label}
                     </TabsTrigger>
                   </Link>

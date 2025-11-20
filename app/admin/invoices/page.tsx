@@ -26,7 +26,7 @@ import {
   TrendingUp,
   TrendingDown,
   Building2,
-} from "lucide-react";
+} from "@/components/icons";
 import { generateInvoicePDF, generateMultipleInvoicesPDF } from "./actions";
 
 interface Invoice {
@@ -480,15 +480,15 @@ export default function AdminInvoicesPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "paid":
-        return <CheckCircle className="h-4 w-4" />;
+        return <CheckCircle size={16} />;
       case "pending":
-        return <Clock className="h-4 w-4" />;
+        return <Clock size={16} />;
       case "overdue":
-        return <XCircle className="h-4 w-4" />;
+        return <XCircle size={16} />;
       case "cancelled":
-        return <XCircle className="h-4 w-4" />;
+        return <XCircle size={16} />;
       default:
-        return <FileText className="h-4 w-4" />;
+        return <FileText size={16} />;
     }
   };
 
@@ -625,7 +625,7 @@ export default function AdminInvoicesPage() {
           onClick={downloadAllPDFs}
           disabled={downloadingAll || filteredInvoices.length === 0}
         >
-          <Download className="h-4 w-4" />
+          <Download size={16} />
           {downloadingAll
             ? "Downloading..."
             : `Download Filtered (${filteredInvoices.length})`}
@@ -714,7 +714,7 @@ export default function AdminInvoicesPage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5" />
+              <Filter size={20} />
               Advanced Filters
             </CardTitle>
             {hasActiveFilters && (
@@ -724,7 +724,7 @@ export default function AdminInvoicesPage() {
                 onClick={clearFilters}
                 className="gap-2"
               >
-                <X className="h-4 w-4" />
+                <X size={16} />
                 Clear All
               </Button>
             )}
@@ -734,7 +734,7 @@ export default function AdminInvoicesPage() {
           {/* Search and Status Row */}
           <div className="flex gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
               <Input
                 placeholder="Search by invoice, order, customer, or restaurant..."
                 value={searchQuery}
@@ -772,7 +772,7 @@ export default function AdminInvoicesPage() {
               </SelectContent>
             </Select>
             <div className="flex items-center gap-2 flex-1">
-              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <Calendar className="text-muted-foreground" size={16} />
               <Input
                 type="date"
                 placeholder="Start date"
@@ -794,7 +794,7 @@ export default function AdminInvoicesPage() {
           {/* Amount Range and Sort Row */}
           <div className="flex gap-4">
             <div className="flex items-center gap-2 flex-1">
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <DollarSign className="text-muted-foreground" size={16} />
               <Input
                 type="number"
                 placeholder="Min amount (AED)"
@@ -831,9 +831,9 @@ export default function AdminInvoicesPage() {
                 onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
               >
                 {sortOrder === "desc" ? (
-                  <TrendingDown className="h-4 w-4" />
+                  <TrendingDown size={16} />
                 ) : (
-                  <TrendingUp className="h-4 w-4" />
+                  <TrendingUp size={16} />
                 )}
               </Button>
             </div>
@@ -844,7 +844,7 @@ export default function AdminInvoicesPage() {
       {/* Results Summary */}
       {hasActiveFilters && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Filter className="h-4 w-4" />
+          <Filter size={16} />
           Showing {filteredInvoices.length} of {invoices.length} invoices
         </div>
       )}
@@ -870,26 +870,26 @@ export default function AdminInvoicesPage() {
                       </div>
                     </Badge>
                     <Badge variant="outline" className="gap-1">
-                      <Building2 className="h-3 w-3" />
+                      <Building2 size={12} />
                       {invoice.restaurant.name}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span className="flex items-center gap-1">
-                      <FileText className="h-4 w-4" />
+                      <FileText size={16} />
                       {invoice.orderNumber}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
+                      <Calendar size={16} />
                       Issued: {new Date(invoice.issueDate).toLocaleDateString()}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
+                      <Calendar size={16} />
                       Due: {new Date(invoice.dueDate).toLocaleDateString()}
                     </span>
                     {invoice.paidDate && (
                       <span className="flex items-center gap-1 text-green-600">
-                        <CheckCircle className="h-4 w-4" />
+                        <CheckCircle size={16} />
                         Paid: {new Date(invoice.paidDate).toLocaleDateString()}
                       </span>
                     )}
@@ -897,7 +897,7 @@ export default function AdminInvoicesPage() {
                 </div>
                 <div className="text-right">
                   <div className="flex items-center gap-1 text-2xl font-bold">
-                    <DollarSign className="h-5 w-5" />
+                    <DollarSign size={20} />
                     <span>AED {invoice.total.toFixed(2)}</span>
                   </div>
                   {invoice.paymentMethod && (
@@ -983,7 +983,7 @@ export default function AdminInvoicesPage() {
                   onClick={() => downloadPDF(invoice)}
                   disabled={downloadingId === invoice.id}
                 >
-                  <Download className="h-4 w-4" />
+                  <Download size={16} />
                   {downloadingId === invoice.id ? "Generating..." : "Download PDF"}
                 </Button>
                 <Button variant="outline">View Details</Button>
@@ -1002,7 +1002,7 @@ export default function AdminInvoicesPage() {
       {filteredInvoices.length === 0 && (
         <Card>
           <CardContent className="py-12 text-center">
-            <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <FileText size={48} className="text-muted-foreground mx-auto mb-4" />
             <p className="text-lg font-medium mb-2">No invoices found</p>
             <p className="text-muted-foreground mb-4">
               No invoices match your current filter criteria

@@ -15,12 +15,12 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import AddIcon from "@mui/icons-material/Add";
-import SearchIcon from "@mui/icons-material/Search";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { Plus } from "@/components/icons/plus";
+import { Search } from "@/components/icons/search";
+import { Edit } from "@/components/icons/edit";
+import { Trash } from "@/components/icons/trash";
+import { Eye } from "@/components/icons/eye";
+import { EyeOff } from "@/components/icons/eye-off";
 import { API_ENDPOINTS } from "@/lib/api";
 import { NutritionLabel } from "@/components/nutrition-label";
 import type { NutritionInfo } from "@/components/nutrition-label";
@@ -498,13 +498,13 @@ export default function MenuPage() {
           </p>
         </div>
         <Button className="gap-2 shadow-lg" onClick={() => setAddDialogOpen(true)}>
-          <AddIcon sx={{ fontSize: 20 }} />
+          <Plus size={20} />
           Add Menu Item
         </Button>
       </div>
 
       <div className="relative">
-        <SearchIcon sx={{ fontSize: 24 }} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <Search size={24} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Search menu items..."
           value={searchQuery}
@@ -585,12 +585,12 @@ export default function MenuPage() {
                     >
                       {item.is_available ? (
                         <>
-                          <VisibilityIcon sx={{ fontSize: 16 }} />
+                          <Eye size={16} />
                           Available
                         </>
                       ) : (
                         <>
-                          <VisibilityOffIcon sx={{ fontSize: 16 }} />
+                          <EyeOff size={16} />
                           Hidden
                         </>
                       )}
@@ -602,7 +602,7 @@ export default function MenuPage() {
                       onClick={() => openEditDialog(item)}
                       disabled={isUpdating}
                     >
-                      <EditIcon sx={{ fontSize: 16 }} />
+                      <Edit size={16} />
                       Edit
                     </Button>
                     <Button
@@ -612,7 +612,7 @@ export default function MenuPage() {
                       onClick={() => deleteMenuItem(item.id, item.name)}
                       disabled={isUpdating}
                     >
-                      <DeleteIcon sx={{ fontSize: 16 }} />
+                      <Trash size={16} />
                     </Button>
                   </div>
                 </div>

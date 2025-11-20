@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Package,
   Download,
-} from "lucide-react";
+} from "@/components/icons";
 
 interface MenuItem {
   id: string;

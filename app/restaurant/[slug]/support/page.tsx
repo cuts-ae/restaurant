@@ -9,8 +9,7 @@ import { io, Socket } from "socket.io-client";
 import { ChatSessionList } from "@/components/chat-session-list";
 import { NewChatDialog } from "@/components/new-chat-dialog";
 import { ChatInterface } from "@/components/chat-interface";
-import AddIcon from "@mui/icons-material/Add";
-import CircularProgress from "@mui/material/CircularProgress";
+import { Plus, Loader2 } from "@/components/icons";
 
 interface Message {
   id: string;
@@ -44,7 +43,9 @@ export default function SupportPage() {
 
   // Sessions state
   const [sessions, setSessions] = useState<ChatSession[]>([]);
-  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
+    null,
+  );
   const [isLoadingSessions, setIsLoadingSessions] = useState(true);
   const [sessionsError, setSessionsError] = useState<string | null>(null);
 
@@ -54,7 +55,9 @@ export default function SupportPage() {
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
 
   // Chat state
-  const [sessionStatus, setSessionStatus] = useState<"waiting" | "active" | "closed">("waiting");
+  const [sessionStatus, setSessionStatus] = useState<
+    "waiting" | "active" | "closed"
+  >("waiting");
   const [isConnected, setIsConnected] = useState(false);
   const [typingUser, setTypingUser] = useState<string | null>(null);
   const [isCreatingSession, setIsCreatingSession] = useState(false);
@@ -76,7 +79,8 @@ export default function SupportPage() {
           throw new Error("No authentication token found");
         }
 
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
+        const apiUrl =
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
         const response = await fetch(`${apiUrl}/api/v1/restaurants/${slug}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -94,7 +98,10 @@ export default function SupportPage() {
         const restaurant = data.restaurant || data;
 
         if (!restaurant || !restaurant.id) {
-          console.error("Invalid restaurant data! restaurant object:", restaurant);
+          console.error(
+            "Invalid restaurant data! restaurant object:",
+            restaurant,
+          );
           throw new Error("Invalid restaurant data received");
         }
 
@@ -105,7 +112,9 @@ export default function SupportPage() {
         setRestaurantId(restaurant.id);
       } catch (error) {
         console.error("Error fetching restaurant:", error);
-        setSessionsError(error instanceof Error ? error.message : "Failed to load restaurant");
+        setSessionsError(
+          error instanceof Error ? error.message : "Failed to load restaurant",
+        );
       } finally {
         setIsLoadingRestaurant(false);
       }
@@ -151,7 +160,8 @@ export default function SupportPage() {
         throw new Error("No authentication token found");
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
+      const apiUrl =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:45000";
       const response = await fetch(`${apiUrl}/api/v1/chat/sessions/my`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -161,14 +171,19 @@ export default function SupportPage() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error("API Error Response:", errorData);
-        throw new Error(errorData.message || `Failed to fetch sessions: ${response.status} ${response.statusText}`);
+        throw new Error(
+          errorData.message ||
+            `Failed to fetch sessions: ${response.status} ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
       console.log("Fetched sessions response:", data);
 
       // Handle different response formats - API might return { data: [...] } or just [...]
-      const sessionsArray = Array.isArray(data) ? data : (data.data || data.sessions || []);
+      const sessionsArray = Array.isArray(data)
+        ? data
+        : data.data || data.sessions || [];
 
       if (!Array.isArray(sessionsArray)) {
         console.error("Unexpected API response format:", data);
@@ -176,13 +191,17 @@ export default function SupportPage() {
       }
 
       const restaurantSessions = sessionsArray.filter(
-        (s: ChatSession) => s.restaurant_id === restaurantId
+        (s: ChatSession) => s.restaurant_id === restaurantId,
       );
-      console.log(`Filtered ${restaurantSessions.length} sessions for restaurant ${restaurantId}`);
+      console.log(
+        `Filtered ${restaurantSessions.length} sessions for restaurant ${restaurantId}`,
+      );
       setSessions(restaurantSessions);
     } catch (error) {
       console.error("Error fetching sessions:", error);
-      setSessionsError(error instanceof Error ? error.message : "Failed to load sessions");
+      setSessionsError(
+        error instanceof Error ? error.message : "Failed to load sessions",
+      );
       setSessions([]);
     } finally {
       setIsLoadingSessions(false);
@@ -229,7 +248,10 @@ export default function SupportPage() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error("Failed to create session - API Error:", errorData);
-        throw new Error(errorData.message || `Failed to create chat session: ${response.status} ${response.statusText}`);
+        throw new Error(
+          errorData.message ||
+            `Failed to create chat session: ${response.status} ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
@@ -240,13 +262,15 @@ export default function SupportPage() {
 
       if (!session || !session.id) {
         console.error("Invalid session response format:", data);
-        throw new Error("Invalid response format from API - missing session ID");
+        throw new Error(
+          "Invalid response format from API - missing session ID",
+        );
       }
 
       console.log("New session created successfully:", session.id);
 
       // Wait for session to be fully created before proceeding
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Refresh sessions list
       await fetchSessions();
@@ -341,7 +365,7 @@ export default function SupportPage() {
     setIsLoadingMessages(true);
     setMessages([]);
 
-    const session = sessions.find(s => s.id === sessionId);
+    const session = sessions.find((s) => s.id === sessionId);
     if (session) {
       setSessionStatus(session.status);
     }
@@ -386,7 +410,9 @@ export default function SupportPage() {
 
       typingTimeoutRef.current = setTimeout(() => {
         if (socketRef.current && selectedSessionId) {
-          socketRef.current.emit("stop_typing", { session_id: selectedSessionId });
+          socketRef.current.emit("stop_typing", {
+            session_id: selectedSessionId,
+          });
         }
       }, 3000);
     }
@@ -421,150 +447,174 @@ export default function SupportPage() {
     }
   };
 
-  const selectedSession = sessions.find(s => s.id === selectedSessionId);
+  const selectedSession = sessions.find((s) => s.id === selectedSessionId);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Support Chat</h2>
-          <p className="text-gray-600">
-            Get help with your restaurant portal or connect with our support team
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <div
-              className={cn(
-                "h-2 w-2 rounded-full",
-                isConnected ? "bg-green-500" : "bg-red-500"
-              )}
-            />
-            <span className="text-sm text-gray-600">
-              {isConnected ? "Connected" : "Disconnected"}
-            </span>
+    <div className="relative min-h-screen">
+      <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(circle_at_1px_1px,rgb(0_0_0)_1px,transparent_0)] bg-[size:40px_40px] pointer-events-none" />
+
+      <div className="relative space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+              Support Chat
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Get help with your restaurant portal or connect with our support
+              team
+            </p>
           </div>
-          <NewChatDialog
-            onCreateChat={createNewSession}
-            isOpen={isNewChatOpen}
-            onOpenChange={setIsNewChatOpen}
-            trigger={
-              <Button className="gap-2" disabled={isCreatingSession || isLoadingRestaurant || !restaurantId}>
-                {isCreatingSession ? (
-                  <>
-                    <CircularProgress size={16} className="text-current" />
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <AddIcon sx={{ fontSize: 20 }} />
-                    New Chat
-                  </>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/50 border border-border/50">
+              <div
+                className={cn(
+                  "h-2 w-2 rounded-full",
+                  isConnected ? "bg-green-500" : "bg-gray-400",
                 )}
-              </Button>
-            }
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-[30%_70%] gap-6 h-[700px]">
-        {/* Left Panel - Sessions List */}
-        <Card className="bg-white rounded-xl shadow-sm border border-border/40 overflow-hidden">
-          <div className="flex flex-col h-full">
-            <div className="border-b border-border/40 p-4">
-              <h3 className="font-semibold text-lg">Conversations</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                {sessions.length} {sessions.length === 1 ? "conversation" : "conversations"}
-              </p>
+              />
+              <span className="text-sm font-medium">
+                {isConnected ? "Connected" : "Disconnected"}
+              </span>
             </div>
-            <div className="flex-1 overflow-y-auto p-4">
-              {sessionsError ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-                  <p className="text-sm text-destructive mb-4">{sessionsError}</p>
-                  <Button onClick={fetchSessions} size="sm" variant="outline">
-                    Retry
-                  </Button>
-                </div>
-              ) : (
-                <ChatSessionList
-                  sessions={sessions}
-                  selectedSessionId={selectedSessionId}
-                  onSessionSelect={handleSessionSelect}
-                  isLoading={isLoadingSessions}
-                />
-              )}
-            </div>
+            <NewChatDialog
+              onCreateChat={createNewSession}
+              isOpen={isNewChatOpen}
+              onOpenChange={setIsNewChatOpen}
+              trigger={
+                <Button
+                  className="gap-2 shadow-sm"
+                  disabled={
+                    isCreatingSession || isLoadingRestaurant || !restaurantId
+                  }
+                >
+                  {isCreatingSession ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-5 w-5" />
+                      New Chat
+                    </>
+                  )}
+                </Button>
+              }
+            />
           </div>
-        </Card>
+        </div>
 
-        {/* Right Panel - Chat Interface */}
-        <Card className="bg-white rounded-xl shadow-sm border border-border/40 overflow-hidden">
-          <div className="flex flex-col h-full">
-            {selectedSessionId && selectedSession ? (
-              <>
-                <div className="border-b border-border/40 p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-lg truncate">
-                        {selectedSession.subject}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Status: <span className="capitalize">{sessionStatus.replace("_", " ")}</span>
-                      </p>
-                    </div>
-                    {sessionStatus === "waiting" && (
-                      <div className="flex items-center gap-2 bg-yellow-50 text-yellow-700 px-3 py-1.5 rounded-full text-sm border border-yellow-200">
-                        <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
-                        </span>
-                        Waiting for agent
-                      </div>
-                    )}
-                    {sessionStatus === "active" && (
-                      <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-full text-sm border border-green-200">
-                        <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                        Active
-                      </div>
-                    )}
-                  </div>
-                </div>
-                {isLoadingMessages ? (
-                  <div className="flex-1 flex items-center justify-center">
-                    <CircularProgress size={32} className="text-muted-foreground" />
+        <div className="grid grid-cols-[30%_70%] gap-6 h-[700px]">
+          {/* Left Panel - Sessions List */}
+          <Card className="bg-white rounded-xl shadow-sm border border-border/40 overflow-hidden">
+            <div className="flex flex-col h-full">
+              <div className="border-b border-border/40 p-4">
+                <h3 className="font-semibold text-lg">Conversations</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {sessions.length}{" "}
+                  {sessions.length === 1 ? "conversation" : "conversations"}
+                </p>
+              </div>
+              <div className="flex-1 overflow-y-auto p-4">
+                {sessionsError ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+                    <p className="text-sm text-destructive mb-4">
+                      {sessionsError}
+                    </p>
+                    <Button onClick={fetchSessions} size="sm" variant="outline">
+                      Retry
+                    </Button>
                   </div>
                 ) : (
-                  <ChatInterface
-                    messages={messages}
-                    inputMessage={inputMessage}
-                    onInputChange={setInputMessage}
-                    onSendMessage={handleSendMessage}
-                    onFileUpload={handleFileUpload}
-                    onTyping={handleTyping}
-                    sessionStatus={sessionStatus}
-                    isConnected={isConnected}
-                    typingUser={typingUser}
-                    disabled={!isConnected}
+                  <ChatSessionList
+                    sessions={sessions}
+                    selectedSessionId={selectedSessionId}
+                    onSessionSelect={handleSessionSelect}
+                    isLoading={isLoadingSessions}
                   />
                 )}
-              </>
-            ) : (
-              <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
-                <div className="rounded-full bg-muted p-6 mb-6">
-                  <AddIcon sx={{ fontSize: 48 }} className="text-muted-foreground" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">No conversation selected</h3>
-                <p className="text-sm text-muted-foreground max-w-md mb-6">
-                  Select a conversation from the list or start a new one to begin chatting with our support team
-                </p>
-                <Button onClick={() => setIsNewChatOpen(true)} className="gap-2">
-                  <AddIcon sx={{ fontSize: 20 }} />
-                  Start New Conversation
-                </Button>
               </div>
-            )}
-          </div>
-        </Card>
+            </div>
+          </Card>
+
+          {/* Right Panel - Chat Interface */}
+          <Card className="bg-white rounded-xl shadow-sm border border-border/40 overflow-hidden">
+            <div className="flex flex-col h-full">
+              {selectedSessionId && selectedSession ? (
+                <>
+                  <div className="border-b border-border/40 p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-lg truncate">
+                          {selectedSession.subject}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Status:{" "}
+                          <span className="capitalize">
+                            {sessionStatus.replace("_", " ")}
+                          </span>
+                        </p>
+                      </div>
+                      {sessionStatus === "waiting" && (
+                        <div className="flex items-center gap-2 bg-yellow-50 text-yellow-700 px-3 py-1.5 rounded-full text-sm border border-yellow-200">
+                          <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                          </span>
+                          Waiting for agent
+                        </div>
+                      )}
+                      {sessionStatus === "active" && (
+                        <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-full text-sm border border-green-200">
+                          <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                          Active
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {isLoadingMessages ? (
+                    <div className="flex-1 flex items-center justify-center">
+                      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                    </div>
+                  ) : (
+                    <ChatInterface
+                      messages={messages}
+                      inputMessage={inputMessage}
+                      onInputChange={setInputMessage}
+                      onSendMessage={handleSendMessage}
+                      onFileUpload={handleFileUpload}
+                      onTyping={handleTyping}
+                      sessionStatus={sessionStatus}
+                      isConnected={isConnected}
+                      typingUser={typingUser}
+                      disabled={!isConnected}
+                    />
+                  )}
+                </>
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
+                  <div className="rounded-full bg-muted p-6 mb-6">
+                    <Plus className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    No conversation selected
+                  </h3>
+                  <p className="text-sm text-muted-foreground max-w-md mb-6">
+                    Select a conversation from the list or start a new one to
+                    begin chatting with our support team
+                  </p>
+                  <Button
+                    onClick={() => setIsNewChatOpen(true)}
+                    className="gap-2"
+                  >
+                    <Plus className="h-5 w-5" />
+                    Start New Conversation
+                  </Button>
+                </div>
+              )}
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import CheckIcon from "@mui/icons-material/Check";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { Check, ChevronDown } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
 type OperatingStatus = "open" | "not_accepting_orders" | "closed";
@@ -120,10 +119,9 @@ export function RestaurantStatusToggle({
             {currentConfig.label}
           </span>
         </div>
-        <KeyboardArrowDownIcon
-          sx={{ fontSize: 20 }}
+        <ChevronDown
           className={cn(
-            "text-muted-foreground transition-transform ml-1",
+            "h-5 w-5 text-muted-foreground transition-transform ml-1",
             isOpen && "rotate-180"
           )}
         />
@@ -147,7 +145,7 @@ export function RestaurantStatusToggle({
                   <span className="font-medium text-sm">{config.label}</span>
                 </div>
                 {status === statusKey && (
-                  <CheckIcon sx={{ fontSize: 20 }} className="text-primary" />
+                  <Check className="h-5 w-5 text-primary" />
                 )}
               </button>
             )

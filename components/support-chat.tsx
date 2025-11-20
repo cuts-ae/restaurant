@@ -12,13 +12,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import ChatIcon from "@mui/icons-material/Chat";
-import SendIcon from "@mui/icons-material/Send";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ErrorIcon from "@mui/icons-material/Error";
-import CircularProgress from "@mui/material/CircularProgress";
+import {
+  MessageCircle,
+  Send,
+  ArrowLeft,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  Loader2
+} from "@/components/icons";
 import { API_ENDPOINTS } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
@@ -217,13 +219,13 @@ export function SupportChat() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "open":
-        return <ErrorIcon sx={{ fontSize: 20 }} className="text-blue-500" />;
+        return <AlertCircle className="h-5 w-5 text-blue-500" />;
       case "in_progress":
-        return <CircularProgress size={16} className="text-orange-500" />;
+        return <Loader2 className="h-4 w-4 animate-spin text-orange-500" />;
       case "closed":
-        return <CheckCircleIcon sx={{ fontSize: 20 }} className="text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
       default:
-        return <AccessTimeIcon sx={{ fontSize: 20 }} className="text-gray-500" />;
+        return <Clock className="h-5 w-5 text-gray-500" />;
     }
   };
 
@@ -284,11 +286,11 @@ export function SupportChat() {
       <div className="flex-1 overflow-y-auto p-4">
         {isLoadingTickets ? (
           <div className="flex items-center justify-center py-12">
-            <CircularProgress size={32} className="text-muted-foreground" />
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : tickets.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <ChatIcon sx={{ fontSize: 48 }} className="text-muted-foreground/50 mb-4" />
+            <MessageCircle className="h-12 w-12 text-muted-foreground/50 mb-4" />
             <p className="text-sm text-muted-foreground mb-6">
               No conversations yet
             </p>
@@ -318,7 +320,7 @@ export function SupportChat() {
                   </div>
                   {ticket.reply_count > 0 && (
                     <div className="flex-shrink-0 flex items-center gap-1 text-xs text-muted-foreground">
-                      <ChatIcon sx={{ fontSize: 16 }} />
+                      <MessageCircle className="h-4 w-4" />
                       <span>{ticket.reply_count}</span>
                     </div>
                   )}
@@ -343,7 +345,7 @@ export function SupportChat() {
           className="w-full gap-2"
           size="lg"
         >
-          <ChatIcon sx={{ fontSize: 20 }} />
+          <MessageCircle className="h-5 w-5" />
           New Conversation
         </Button>
       </div>
@@ -360,7 +362,7 @@ export function SupportChat() {
             onClick={() => setView("list")}
             className="h-8 w-8"
           >
-            <ArrowBackIcon sx={{ fontSize: 20 }} />
+            <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
             <DialogTitle className="text-xl font-semibold">
@@ -422,12 +424,12 @@ export function SupportChat() {
           >
             {isSubmitting ? (
               <>
-                <CircularProgress size={16} className="text-current" />
+                <Loader2 className="h-4 w-4 animate-spin" />
                 Creating...
               </>
             ) : (
               <>
-                <SendIcon sx={{ fontSize: 20 }} />
+                <Send className="h-5 w-5" />
                 Start Conversation
               </>
             )}
@@ -453,7 +455,7 @@ export function SupportChat() {
               }}
               className="h-8 w-8"
             >
-              <ArrowBackIcon sx={{ fontSize: 20 }} />
+              <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="flex-1 min-w-0">
               <DialogTitle className="text-lg font-semibold truncate">
@@ -482,7 +484,7 @@ export function SupportChat() {
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {isLoadingMessages ? (
             <div className="flex items-center justify-center py-12">
-              <CircularProgress size={32} className="text-muted-foreground" />
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : selectedTicket.messages && selectedTicket.messages.length > 0 ? (
             selectedTicket.messages.map((msg, index) => (
@@ -543,9 +545,9 @@ export function SupportChat() {
                 className="h-11 w-11 flex-shrink-0"
               >
                 {isSendingReply ? (
-                  <CircularProgress size={16} className="text-current" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  <SendIcon sx={{ fontSize: 20 }} />
+                  <Send className="h-5 w-5" />
                 )}
               </Button>
             </div>
@@ -563,7 +565,7 @@ export function SupportChat() {
           size="icon"
           className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 z-50 border-2 hover:scale-105"
         >
-          <ChatIcon sx={{ fontSize: 28 }} />
+          <MessageCircle className="h-7 w-7" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] h-[700px] p-0 gap-0 overflow-hidden">

@@ -13,7 +13,7 @@ const puppeteer = require('puppeteer');
     await page.waitForSelector('input[type="email"]');
     
     await page.type('input[type="email"]', 'owner1@cuts.ae');
-    await page.type('input[type="password"]', 'password123');
+    await page.type('input[type="password"]', 'TabsTriggerIsnt2026*$');
     await page.click('button[type="submit"]');
     
     await page.waitForNavigation();

@@ -23,7 +23,7 @@ import {
   Star,
   Utensils,
   Banknote,
-} from "lucide-react";
+} from "@/components/icons";
 
 interface DashboardStats {
   overview: {

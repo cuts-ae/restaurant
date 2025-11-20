@@ -60,7 +60,7 @@ async function testOrdersPageDirectly() {
     console.log('\n=== Step 2: Fill Login Credentials ===');
     await page.waitForSelector('input[type="email"], input[name="email"]', { timeout: 5000 });
     await page.type('input[type="email"], input[name="email"]', 'owner1@cuts.ae');
-    await page.type('input[type="password"], input[name="password"]', 'password123');
+    await page.type('input[type="password"], input[name="password"]', 'TabsTriggerIsnt2026*$');
     results.steps.push({ step: 2, action: 'Fill login credentials', status: 'success' });
 
     // Step 3: Click login button

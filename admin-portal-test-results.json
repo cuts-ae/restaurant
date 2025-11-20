@@ -1,0 +1,170 @@
+{
+  "timestamp": "2025-11-19T01:31:42.552Z",
+  "portal": "Admin Portal",
+  "baseUrl": "http://localhost:45003",
+  "tests": [
+    {
+      "page": "Login",
+      "url": "http://localhost:45003/login",
+      "status": "failed",
+      "duration": 10773,
+      "screenshots": [
+        "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/admin-portal/admin-01-login-page.png",
+        "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/admin-portal/admin-login-error.png"
+      ],
+      "consoleErrors": [
+        "Test Error: Waiting for selector `input[type=\"email\"], input[name=\"email\"]` failed",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "actions": [
+        "Navigated to login page"
+      ],
+      "notes": []
+    },
+    {
+      "page": "Dashboard",
+      "url": "http://localhost:45003/admin/dashboard",
+      "status": "passed",
+      "duration": 1005,
+      "screenshots": [
+        "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/admin-portal/admin-04-dashboard.png"
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "actions": [
+        "Navigated to dashboard",
+        "Page title: ",
+        "Found 0 card elements",
+        "Found 0 navigation links"
+      ],
+      "notes": [
+        "Dashboard loaded successfully"
+      ],
+      "elements": {
+        "pageTitle": "",
+        "cardCount": 0,
+        "navLinkCount": 0
+      }
+    },
+    {
+      "page": "Restaurants",
+      "url": "http://localhost:45003/admin/restaurants",
+      "status": "passed",
+      "duration": 999,
+      "screenshots": [
+        "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/admin-portal/admin-05-restaurants.png"
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "actions": [
+        "Navigated to restaurants page",
+        "Page title: ",
+        "Found 0 table rows",
+        "Found 0 buttons"
+      ],
+      "notes": [
+        "Restaurants page loaded successfully"
+      ],
+      "elements": {
+        "pageTitle": "",
+        "tableRows": 0,
+        "buttonCount": 0
+      }
+    },
+    {
+      "page": "Orders",
+      "url": "http://localhost:45003/admin/orders",
+      "status": "passed",
+      "duration": 1001,
+      "screenshots": [
+        "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/admin-portal/admin-06-orders.png"
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "actions": [
+        "Navigated to orders page",
+        "Page title: ",
+        "Found 0 table rows",
+        "Found 0 order cards",
+        "Found 0 filter/tab elements"
+      ],
+      "notes": [
+        "Orders page loaded successfully"
+      ],
+      "elements": {
+        "pageTitle": "",
+        "tableRows": 0,
+        "orderCards": 0,
+        "filterCount": 0
+      }
+    },
+    {
+      "page": "Users",
+      "url": "http://localhost:45003/admin/users",
+      "status": "passed",
+      "duration": 1017,
+      "screenshots": [
+        "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/admin-portal/admin-07-users.png"
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "actions": [
+        "Navigated to users page",
+        "Page title: ",
+        "Found 0 table rows",
+        "Found 0 buttons",
+        "Found 0 filter elements"
+      ],
+      "notes": [
+        "Users page loaded successfully"
+      ],
+      "elements": {
+        "pageTitle": "",
+        "tableRows": 0,
+        "buttonCount": 0,
+        "filterCount": 0
+      }
+    },
+    {
+      "page": "Button Interactions",
+      "url": "http://localhost:45003/admin/users",
+      "status": "passed",
+      "duration": 997,
+      "screenshots": [
+        "/Users/sour/Projects/cuts.ae/restaurant/test-screenshots/admin-portal/admin-08-navigation-test.png"
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "actions": [
+        "Found 0 navigation links to test"
+      ],
+      "notes": [
+        "Navigation button tests completed"
+      ]
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "passed": 5,
+    "failed": 1,
+    "warnings": 0
+  }
+}

@@ -2,9 +2,7 @@
 
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import CheckIcon from "@mui/icons-material/Check";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { Check, ChevronDown, ChevronUp } from "@/components/icons";
 
 import { cn } from "@/lib/utils";
 
@@ -28,7 +26,7 @@ const SelectTrigger = React.forwardRef<
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <KeyboardArrowDownIcon sx={{ fontSize: 20 }} className="opacity-50" />
+      <ChevronDown className="h-5 w-5 opacity-50" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -46,7 +44,7 @@ const SelectScrollUpButton = React.forwardRef<
     )}
     {...props}
   >
-    <KeyboardArrowUpIcon sx={{ fontSize: 20 }} />
+    <ChevronUp className="h-5 w-5" />
   </SelectPrimitive.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -63,7 +61,7 @@ const SelectScrollDownButton = React.forwardRef<
     )}
     {...props}
   >
-    <KeyboardArrowDownIcon sx={{ fontSize: 20 }} />
+    <ChevronDown className="h-5 w-5" />
   </SelectPrimitive.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName =
@@ -127,7 +125,7 @@ const SelectItem = React.forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <CheckIcon sx={{ fontSize: 20 }} />
+        <Check className="h-5 w-5" />
       </SelectPrimitive.ItemIndicator>
     </span>
 

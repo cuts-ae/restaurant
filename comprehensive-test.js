@@ -53,10 +53,10 @@ async function test1LoginRedirect(browser) {
     await takeScreenshot(page, 'test1-step1-login-page');
 
     // Step 2: Fill in credentials
-    console.log('Step 2: Filling in credentials (owner1@cuts.ae / password123)...');
+    console.log('Step 2: Filling in credentials (owner1@cuts.ae / TabsTriggerIsnt2026*$)...');
     await page.waitForSelector('input[type="email"]', { timeout: 5000 });
     await page.type('input[type="email"]', 'owner1@cuts.ae');
-    await page.type('input[type="password"]', 'password123');
+    await page.type('input[type="password"]', 'TabsTriggerIsnt2026*$');
     await takeScreenshot(page, 'test1-step2-filled-credentials');
 
     // Step 3: Click login button
@@ -150,7 +150,7 @@ async function test2MenuPage(browser) {
     await sleep(1000);
     await page.waitForSelector('input[type="email"]', { timeout: 5000 });
     await page.type('input[type="email"]', 'owner1@cuts.ae');
-    await page.type('input[type="password"]', 'password123');
+    await page.type('input[type="password"]', 'TabsTriggerIsnt2026*$');
     await page.click('button[type="submit"]');
     await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 });
     await sleep(1000);
@@ -309,7 +309,7 @@ async function test3OrdersPage(browser) {
     await sleep(1000);
     await page.waitForSelector('input[type="email"]', { timeout: 5000 });
     await page.type('input[type="email"]', 'owner1@cuts.ae');
-    await page.type('input[type="password"]', 'password123');
+    await page.type('input[type="password"]', 'TabsTriggerIsnt2026*$');
     await page.click('button[type="submit"]');
     await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 });
     await sleep(1000);
@@ -410,7 +410,7 @@ async function test4PasswordAutofill(browser) {
 
     // Type credentials
     await page.type('input[type="email"]', 'owner1@cuts.ae');
-    await page.type('input[type="password"]', 'password123');
+    await page.type('input[type="password"]', 'TabsTriggerIsnt2026*$');
     await takeScreenshot(page, 'test4-step2-credentials-filled');
 
     await page.click('button[type="submit"]');
