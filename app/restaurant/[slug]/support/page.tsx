@@ -456,7 +456,7 @@ export default function SupportPage() {
       <div className="relative space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+            <h2 className="text-3xl font-bold tracking-tighter text-foreground mb-2">
               Support Chat
             </h2>
             <p className="text-muted-foreground text-sm">

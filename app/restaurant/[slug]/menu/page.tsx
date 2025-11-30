@@ -492,7 +492,7 @@ export default function MenuPage() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h2 className="text-3xl font-bold tracking-tight">Menu Management</h2>
+          <h2 className="text-3xl font-bold tracking-tighter">Menu Management</h2>
           <p className="text-muted-foreground">
             Manage your menu items and nutritional information
           </p>
@@ -521,8 +521,7 @@ export default function MenuPage() {
           return (
             <Card
               key={item.id}
-              className="group hover:shadow-xl transition-all duration-300 hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4"
-              style={{ animationDelay: `${index * 50}ms` }}
+              className="group hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
             >
               <CardContent className="p-6 flex flex-col h-full">
                 {/* Icon and Name */}

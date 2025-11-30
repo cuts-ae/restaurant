@@ -261,7 +261,7 @@ export default function OrdersPage() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold tracking-tight">Today's Orders</h2>
+        <h2 className="text-3xl font-bold tracking-tighter">Today's Orders</h2>
         <p className="text-muted-foreground">
           Manage and track orders received today
         </p>

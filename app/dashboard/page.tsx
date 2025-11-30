@@ -99,7 +99,7 @@ export default function DashboardPage() {
                 alt="Logo"
                 className="w-10 h-10 object-contain"
               />
-              <span className="text-xl font-semibold">
+              <span className="text-xl font-semibold tracking-tight">
                 {userName ? `${userName}'s Restaurant Portal` : "Restaurant Portal"}
               </span>
             </div>
@@ -123,10 +123,10 @@ export default function DashboardPage() {
       </div>
 
       <div className="relative max-w-7xl mx-auto p-8 lg:p-12 space-y-12 pb-24">
-        <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+        <div className="space-y-6">
           <div className="flex items-center gap-4">
             <div className="space-y-2">
-              <h1 className="text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text">
+              <h1 className="text-5xl lg:text-6xl font-bold tracking-tighter bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text">
                 Welcome back
               </h1>
               <p className="text-lg text-muted-foreground">
@@ -136,12 +136,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          {restaurants.map((restaurant, index) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {restaurants.map((restaurant) => (
             <Card
               key={restaurant.id}
-              className="group hover:shadow-xl hover:border-primary/20 transition-all duration-300 cursor-pointer hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className="group hover:shadow-xl hover:border-primary/20 transition-all duration-300 cursor-pointer hover:scale-[1.02]"
               onClick={() => {
                 localStorage.setItem(
                   `restaurant-${restaurant.slug}`,
@@ -154,7 +153,7 @@ export default function DashboardPage() {
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 min-w-16 min-h-16 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900 flex items-center justify-center text-4xl flex-shrink-0">
-                      {restaurant.icon || "🥗"}
+                      {restaurant.icon || "🍽️"}
                     </div>
                     <div className="space-y-1">
                       <CardTitle className="text-2xl">
@@ -197,7 +196,7 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        <Card className="border-dashed animate-in fade-in duration-1000">
+        <Card className="border-dashed">
           <CardContent className="flex items-center justify-center p-12">
             <div className="text-center space-y-4">
               <div className="w-16 h-16 mx-auto rounded-full bg-muted flex items-center justify-center">

@@ -90,7 +90,7 @@ export default function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <h1 className="text-4xl font-bold tracking-tight">
+              <h1 className="text-4xl font-bold tracking-tighter">
                 Restaurant Portal
               </h1>
               <p className="text-sm text-muted-foreground">

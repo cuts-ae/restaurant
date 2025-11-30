@@ -172,7 +172,7 @@ export default function RestaurantLayout({
                 >
                   ← Back to Dashboard
                 </Link>
-                <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text">
+                <h1 className="text-3xl font-bold tracking-tighter bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text">
                   {restaurantName}
                 </h1>
               </div>

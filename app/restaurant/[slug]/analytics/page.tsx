@@ -355,23 +355,22 @@ export default function AnalyticsPage() {
   }));
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8">
       <div className="space-y-1">
-        <h2 className="text-3xl font-bold tracking-tight">Analytics Dashboard</h2>
+        <h2 className="text-3xl font-bold tracking-tighter">Analytics Dashboard</h2>
         <p className="text-muted-foreground">
           Comprehensive insights into your restaurant performance
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-        {statsCards.map((stat, index) => {
+        {statsCards.map((stat) => {
           const Icon = stat.icon;
 
           return (
             <Card
               key={stat.title}
-              className="hover:shadow-lg transition-all duration-300 animate-in fade-in slide-in-from-bottom-4"
-              style={{ animationDelay: `${index * 50}ms` }}
+              className="hover:shadow-lg transition-shadow duration-300"
             >
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
@@ -408,7 +407,7 @@ export default function AnalyticsPage() {
       {/* All Charts in 2x2 Grid - Same Height */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Top Selling Items */}
-        <Card className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-[340px] flex flex-col">
+        <Card className="h-[340px] flex flex-col animate-in fade-in duration-500">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
               <Target className="h-5 w-5" />
@@ -453,7 +452,7 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
         {/* Revenue Trend Chart */}
-        <Card className="animate-in fade-in duration-700 h-[340px] flex flex-col">
+        <Card className="h-[340px] flex flex-col animate-in fade-in duration-500">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
               <TrendingUp className="h-5 w-5" />
@@ -511,7 +510,7 @@ export default function AnalyticsPage() {
         </Card>
 
         {/* Orders by Day Chart */}
-        <Card className="animate-in fade-in duration-800 h-[340px] flex flex-col">
+        <Card className="h-[340px] flex flex-col animate-in fade-in duration-500">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
               <Package className="h-5 w-5" />
@@ -564,7 +563,7 @@ export default function AnalyticsPage() {
         </Card>
 
         {/* Average Order Value */}
-        <Card className="animate-in fade-in duration-900 h-[340px] flex flex-col">
+        <Card className="h-[340px] flex flex-col animate-in fade-in duration-500">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
               <Target className="h-5 w-5" />
